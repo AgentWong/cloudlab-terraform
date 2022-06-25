@@ -1,15 +1,21 @@
-#Create subnet # 1 in us-east-1
-resource "aws_subnet" "subnet_1" {
-  provider          = aws.region-master
-  availability_zone = element(data.aws_availability_zones.azs.names, 0)
-  vpc_id            = aws_vpc.vpc_useast.id
-  cidr_block        = "10.0.1.0/24"
+#Create public subnets
+resource "aws_subnet" "public_subnets" {
+  for_each                = toset(var.public_subnets)
+  availability_zone       = element(data.aws_availability_zones.this.names, index(var.public_subnets, each.value))
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = each.value
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "${var.vpc_name}_${element(data.aws_availability_zones.this.names, index(var.public_subnets, each.value))}_public"
+  }
 }
-
-#Create subnet #2  in us-east-1
-resource "aws_subnet" "subnet_2" {
-  provider          = aws.region-master
-  vpc_id            = aws_vpc.vpc_useast.id
-  availability_zone = element(data.aws_availability_zones.azs.names, 1)
-  cidr_block        = "10.0.2.0/24"
+#Create private subnets
+resource "aws_subnet" "private_subnets" {
+  for_each          = toset(var.private_subnets)
+  availability_zone = element(data.aws_availability_zones.this.names, index(var.private_subnets, each.value))
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = each.value
+  tags = {
+    Name = "${var.vpc_name}_${element(data.aws_availability_zones.this.names, index(var.private_subnets, each.value))}_private"
+  }
 }

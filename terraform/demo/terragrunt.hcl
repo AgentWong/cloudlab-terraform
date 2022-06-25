@@ -1,7 +1,7 @@
 remote_state {
   backend = "s3"
   config = {
-    bucket = "eden-prod-4ecd0686"
+    bucket = "eden-prod-4ecd0688"
     key    = "${path_relative_to_include()}/terraform.tfstate"
     region = "us-west-2"
 
@@ -10,8 +10,8 @@ remote_state {
   }
 }
 
-generate "backend" {
-  path      = "backend.tf"
+generate "provider" {
+  path      = "provider.tf"
   if_exists = "overwrite"
   contents  = <<EOF
   terraform {
