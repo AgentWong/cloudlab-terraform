@@ -6,7 +6,7 @@ resource "aws_vpc" "this" {
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
-    Name = "${var.vpc_name}_${var.region}"
+    Name = "vpc-${var.prefix_name}_${var.region}"
   }
 }
 #Get all available AZ's in VPC for master region
@@ -18,6 +18,6 @@ data "aws_availability_zones" "this" {
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
   tags = {
-    Name = "${var.vpc_name}_${var.region}-igw"
+    Name = "${var.prefix_name}_${var.region}-igw"
   }
 }

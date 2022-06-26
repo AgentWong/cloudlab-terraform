@@ -3,9 +3,14 @@ variable "vpc_cidr" {
   description = "CIDR range for the VPC."
   default     = null
 }
-variable "vpc_name" {
+variable "tgw_cidr" {
   type        = string
-  description = "Name of the VPC."
+  description = "CIDR range for the transit gateway."
+  default     = null
+}
+variable "prefix_name" {
+  type        = string
+  description = "Name of the environment."
   default     = null
 }
 variable "region" {
