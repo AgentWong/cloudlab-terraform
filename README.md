@@ -1,2 +1,2 @@
-# cloudlab-terraform
-Cloud lab to test AWS Terraform code
+# Cloudlab Terraform
+This is a cloud lab to test the use of Terragrunt for AWS code.
