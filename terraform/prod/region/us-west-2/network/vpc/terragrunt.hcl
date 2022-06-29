@@ -1,17 +1,11 @@
 terraform {
-  source = "../../../../modules//base/network"
-}
-generate "provider" {
-  path      = "provider.tf"
-  if_exists = "overwrite"
-  contents  = <<EOF
-  provider "aws" {
-    region = "us-west-2"
-  }
-  EOF
+  source = "../../../../../modules//base/network/vpc"
 }
 include "root" {
   path = find_in_parent_folders()
+}
+include "region" {
+  path = "${dirname(find_in_parent_folders())}/region/us-west-2/region.hcl"
 }
 inputs = {
   prefix_name      = "prod"
