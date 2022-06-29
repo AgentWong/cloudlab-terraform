@@ -1,6 +1,4 @@
-### ACG Regions are us-east-1 and us-west-2 ###
-
-#Create VPC in us-west-2
+#Create VPC
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -9,12 +7,18 @@ resource "aws_vpc" "this" {
     Name = "vpc-${var.prefix_name}_${var.region}"
   }
 }
-#Get all available AZ's in VPC for master region
+#Get all available AZ's in VPC
 data "aws_availability_zones" "this" {
   state = "available"
+
+  # Exclude local availability zones.
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
 }
 
-#Create IGW in us-west-2
+#Create IGW
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
   tags = {

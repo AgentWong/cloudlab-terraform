@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance" {
-    name = var.instance_name
+  name = var.instance_name
 }
 resource "aws_security_group_rule" "allow_http_inbound" {
   type              = "ingress"

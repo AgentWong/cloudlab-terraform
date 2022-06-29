@@ -6,6 +6,11 @@ include "root" {
 }
 inputs = {
   # EC2
+  ami_owner = ""
+  ami_name = ""
+  count = ""
+  instance_name = "prod"
+  subnet_id = ""
   user_data = <<EOF
     #!/bin/bash
     yum -y install httpd git
@@ -16,10 +21,6 @@ inputs = {
     cd Mastering-AWS-System-Administration/Chapter4-Scalable-compute-capacity-in-the-cloud-via-EC2/html/
     cp -avr work /var/www/html/
   EOF
-  instance_name = "prod"
-  ami_owner = ""
-  ami_name = ""
-  subnet_id = ""
 
   # ALB
   alb_name = ""

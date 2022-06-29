@@ -1,4 +1,5 @@
 # EC2
+variable "count" {}
 variable "user_data" {}
 variable "instance_name" {}
 variable "ami_owner" {}
