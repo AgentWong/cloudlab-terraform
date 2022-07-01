@@ -1,7 +1,7 @@
 remote_state {
   backend = "s3"
   config = {
-    bucket = "eden-prod-4ecd0688"
+    bucket = "eden-4ecd0688"
     key    = "${path_relative_to_include()}/terraform.tfstate"
     region = "us-west-2"
 

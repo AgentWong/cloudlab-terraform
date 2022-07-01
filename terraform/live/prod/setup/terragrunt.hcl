@@ -1,11 +1,11 @@
 terraform {
-  source = "../../../../modules//composite/setup"
+  source = "../../../modules//composite/setup"
 }
 include "root" {
   path = find_in_parent_folders()
 }
 include "region" {
-  path = "${dirname(find_in_parent_folders())}/_env/regions/us-west-2.hcl"
+  path = find_in_parent_folders("env.hcl")
   expose = true
 }
 inputs = {
@@ -14,7 +14,7 @@ inputs = {
   public_key = file("~/.ssh/id_rsa.pub")
 
   # VPC
-  prefix_name     = "prod"
+  prefix_name     = include.region.locals.env
   vpc_cidr        = "10.0.0.0/16"
   tgw_cidr        = "10.0.0.0/8"
   region          = include.region.locals.region

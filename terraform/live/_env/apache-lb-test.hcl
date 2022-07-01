@@ -1,21 +1,16 @@
-terraform {
-  source = "../../../../../modules//composite/services/apache-lb-test"
-}
-include "root" {
-  path = find_in_parent_folders()
-}
-include "region" {
-  path = "${dirname(find_in_parent_folders())}/_env/regions/us-west-2.hcl"
+locals {
+  env_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  env_name = local.env_vars.locals.env
 }
 dependency "setup" {
-  config_path = "../../setup"
+  config_path = "${get_terragrunt_dir()}/../../setup"
 }
 inputs = {
   # EC2
   ami_owner      = "amazon"
   ami_name       = "amzn-ami-hvm*"
   instance_count = "2"
-  instance_name  = "prod-apache"
+  instance_name  = "${local.env_name}-apache"
   key_name       = dependency.setup.outputs.key_name
   user_data      = <<EOF
     #!/bin/bash
@@ -29,7 +24,7 @@ inputs = {
   EOF
 
   # ALB
-  alb_name   = "prod-alb"
+  alb_name   = "${local.env_name}-alb"
   subnet1_id = dependency.setup.outputs.public_subnets[0]
   subnet2_id = dependency.setup.outputs.public_subnets[1]
   vpc_id     = dependency.setup.outputs.vpc_id
