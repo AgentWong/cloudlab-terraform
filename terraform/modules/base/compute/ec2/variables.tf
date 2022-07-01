@@ -6,3 +6,6 @@ variable "subnet_id" {}
 variable "key_name" {}
 variable "instance_count" {}
 variable "vpc_id" {}
+variable "instance_type" {
+    default = "t2.micro"
+}

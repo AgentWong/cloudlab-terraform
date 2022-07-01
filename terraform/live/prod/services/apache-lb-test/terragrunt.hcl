@@ -9,6 +9,9 @@ include "region" {
   expose = true
 }
 include "apache-lb-test" {
-  path = "${get_terragrunt_dir()}/../../../_env/apache-lb-test.hcl"
+  path = "${dirname(find_in_parent_folders())}/_env/apache-lb-test.hcl"
   expose = true
+}
+inputs = {
+  instance_type = "t3.micro"
 }

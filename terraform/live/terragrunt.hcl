@@ -1,11 +1,11 @@
 remote_state {
   backend = "s3"
   config = {
-    bucket = "eden-4ecd0688"
+    bucket = "${local.org_name}-4ecd0688"
     key    = "${path_relative_to_include()}/terraform.tfstate"
     region = "us-west-2"
 
-    dynamodb_table = "eden-locks"
+    dynamodb_table = "${local.org_name}"
     encrypt        = true
   }
 }
@@ -18,4 +18,8 @@ generate "backend" {
         backend "s3" {}
     }
   EOF
+}
+
+locals {
+  org_name = "valhalla"
 }

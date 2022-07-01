@@ -1,7 +1,7 @@
 resource "aws_instance" "this" {
   count                  = var.instance_count
   ami                    = data.aws_ami.instance.id
-  instance_type          = "t2.micro"
+  instance_type          = var.instance_type
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.instance.id]
   subnet_id              = var.subnet_id

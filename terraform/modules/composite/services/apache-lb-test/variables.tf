@@ -5,6 +5,7 @@ variable "ami_owner" {}
 variable "ami_name" {}
 variable "key_name" {}
 variable "instance_count" {}
+variable "instance_type" {}
 
 # ALB
 variable "alb_name" {}

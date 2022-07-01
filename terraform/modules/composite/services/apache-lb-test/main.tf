@@ -4,6 +4,7 @@ module "ec2" {
   user_data      = var.user_data
   key_name       = var.key_name
   instance_name  = var.instance_name
+  instance_type  = var.instance_type
   instance_count = var.instance_count
   ami_owner      = var.ami_owner
   ami_name       = var.ami_name

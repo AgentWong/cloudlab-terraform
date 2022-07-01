@@ -3,11 +3,11 @@ generate "provider" {
   if_exists = "overwrite"
   contents  = <<EOF
   provider "aws" {
-    region = "us-east-1"
+    region = "${local.region}"
   }
   EOF
 }
 locals {
   region = "us-east-1"
-  env    = "dr"
+  env    = "dev"
 }
