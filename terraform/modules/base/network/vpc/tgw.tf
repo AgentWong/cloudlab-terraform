@@ -19,7 +19,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
     }
 }
 resource "aws_route" "tgw_route" {
-  route_table_id = aws_route_table.public_route.id
+  route_table_id = aws_route_table.public.id
   destination_cidr_block = var.tgw_cidr
   transit_gateway_id = aws_ec2_transit_gateway.this.id
 }

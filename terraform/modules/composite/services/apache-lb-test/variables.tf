@@ -1,12 +1,13 @@
 # EC2
-variable "count" {}
 variable "user_data" {}
 variable "instance_name" {}
 variable "ami_owner" {}
 variable "ami_name" {}
-variable "subnet_id" {}
+variable "key_name" {}
+variable "instance_count" {}
 
 # ALB
 variable "alb_name" {}
-variable "public_subnets" {}
 variable "vpc_id" {}
+variable "subnet1_id" {}
+variable "subnet2_id" {}

@@ -1,5 +1,6 @@
 resource "aws_security_group" "instance" {
   name = var.instance_name
+  vpc_id = var.vpc_id
 }
 resource "aws_security_group_rule" "allow_http_inbound" {
   type              = "ingress"

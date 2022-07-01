@@ -1,5 +1,5 @@
-resource "aws_instance" "prod_instance" {
-  count                  = var.count
+resource "aws_instance" "this" {
+  count                  = var.instance_count
   ami                    = data.aws_ami.instance.id
   instance_type          = "t2.micro"
   key_name               = var.key_name
@@ -7,6 +7,6 @@ resource "aws_instance" "prod_instance" {
   subnet_id              = var.subnet_id
   user_data              = var.user_data
   tags = {
-    Name = "${var.instance_name}"
+    Name = "${var.instance_name}-${count.index}"
   }
 }
