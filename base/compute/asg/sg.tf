@@ -4,7 +4,7 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_security_group_rule" "allow_inbound" {
-  for_each          = { for k, v in var.ingress_ports : k => v }
+  for_each          = { for k, v in var.ingress_ports : v => v }
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
 

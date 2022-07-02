@@ -3,7 +3,7 @@ resource "aws_security_group" "alb" {
   vpc_id = var.vpc_id
 }
 resource "aws_security_group_rule" "allow_inbound" {
-  for_each          = { for k, v in var.alb_ingress_ports : k => v }
+  for_each          = { for k, v in var.alb_ingress_ports : v => v }
   type              = "ingress"
   security_group_id = aws_security_group.alb.id
 
