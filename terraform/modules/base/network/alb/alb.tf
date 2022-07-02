@@ -1,6 +1,6 @@
 resource "aws_alb" "this" {
-  name            = var.alb_name
-  subnets         = [var.subnet1_id, var.subnet2_id]
+  name            = "${var.alb_name}-alb"
+  subnets         = var.subnet_ids
   security_groups = [aws_security_group.alb.id]
   internal        = false
   tags = {
@@ -33,11 +33,4 @@ resource "aws_lb_listener" "this" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.this.arn
   }
-}
-
-resource "aws_lb_target_group_attachment" "this" {
-  for_each         = { for k,v in var.instance_ids : k => v }
-  target_group_arn = aws_lb_target_group.this.arn
-  target_id        = each.value
-  port             = 80
 }

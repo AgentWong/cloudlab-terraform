@@ -6,6 +6,9 @@ variable "ami_name" {}
 variable "key_name" {}
 variable "instance_count" {}
 variable "instance_type" {}
+variable "ingress_ports" {
+    type = list(string)
+}
 
 # ALB
 variable "alb_name" {}

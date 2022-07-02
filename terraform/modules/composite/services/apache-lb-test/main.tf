@@ -10,13 +10,14 @@ module "ec2" {
   ami_name       = var.ami_name
   subnet_id      = var.subnet1_id
   vpc_id         = var.vpc_id
+  ingress_ports  = var.ingress_ports
 }
 module "alb" {
   source = "../../../base/network/alb"
 
   alb_name     = var.alb_name
-  subnet1_id   = var.subnet1_id
-  subnet2_id   = var.subnet2_id
+  subnet_ids   = [var.subnet1_id, var.subnet2_id]
   vpc_id       = var.vpc_id
   instance_ids = module.ec2.instance_ids
+  ingress_ports  = var.ingress_ports
 }

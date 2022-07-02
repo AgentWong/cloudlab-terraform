@@ -1,11 +1,12 @@
-resource "aws_security_group" "alb" {
-    name = "${var.alb_name}-alb"
-    vpc_id = var.vpc_id
+resource "aws_security_group" "instance" {
+  name   = "${var.cluster_name}-asg-instance"
+  vpc_id = var.vpc_id
 }
+
 resource "aws_security_group_rule" "allow_inbound" {
-  for_each = { for k, v in var.ingress_ports : k => v }
+  for_each          = { for k, v in var.ingress_ports : k => v }
   type              = "ingress"
-  security_group_id = aws_security_group.alb.id
+  security_group_id = aws_security_group.instance.id
 
   from_port   = each.value
   to_port     = each.value
@@ -14,7 +15,7 @@ resource "aws_security_group_rule" "allow_inbound" {
 }
 resource "aws_security_group_rule" "allow_all_outbound" {
   type              = "egress"
-  security_group_id = aws_security_group.alb.id
+  security_group_id = aws_security_group.instance.id
 
   from_port   = 0
   to_port     = 0

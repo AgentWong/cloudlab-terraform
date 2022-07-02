@@ -1,5 +1,5 @@
 terraform {
-  source = "../../../../modules//composite/services/apache-lb-test"
+  source = "../../../../modules//composite/services/apache-asg-test"
 }
 include "root" {
   path = find_in_parent_folders()
@@ -9,7 +9,7 @@ include "region" {
   expose = true
 }
 include "apache-lb-test" {
-  path = "${dirname(find_in_parent_folders())}/_env/apache-lb-test.hcl"
+  path = "${dirname(find_in_parent_folders())}/_env/apache-asg-test.hcl"
   expose = true
 }
 inputs = {

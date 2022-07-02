@@ -1,24 +1,26 @@
 locals {
   env_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-  env      = local.env_vars.locals.env
-  app_name = "${local.env}-apache"
+  env = local.env_vars.locals.env
+  app_name = "${local.env}-apache-asg"
 }
 dependency "setup" {
   config_path = "${get_terragrunt_dir()}/../../setup"
 }
 inputs = {
   # Shared
-  ingress_ports = [22, 80]
-  vpc_id        = dependency.setup.outputs.vpc_id
+  subnet_ids = dependency.setup.outputs.public_subnets
+  vpc_id     = dependency.setup.outputs.vpc_id
+  ingress_ports      = [22, 80]
 
-  # EC2
-  ami_owner      = "amazon"
-  ami_name       = "amzn-ami-hvm*"
-  instance_count = "2"
-  instance_name  = local.app_name
-
-  key_name  = dependency.setup.outputs.key_name
-  user_data = <<EOF
+  # ASG
+  ami_owner         = "amazon"
+  ami_name          = "amzn-ami-hvm*"
+  min_size          = "1"
+  max_size          = "3"
+  cluster_name      = local.app_name
+  health_check_type = "ELB"
+  key_name          = dependency.setup.outputs.key_name
+  user_data         = <<EOF
     #!/bin/bash
     yum -y install httpd git
     service httpd start
@@ -31,7 +33,5 @@ inputs = {
 
   # ALB
   alb_name   = local.app_name
-  subnet1_id = dependency.setup.outputs.public_subnets[0]
-  subnet2_id = dependency.setup.outputs.public_subnets[1]
-
+  
 }
