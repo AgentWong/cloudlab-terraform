@@ -20,8 +20,8 @@ module "asg" {
 module "alb" {
   source = "../../../base/network/alb"
 
-  alb_name      = var.alb_name
-  subnet_ids    = var.subnet_ids
-  vpc_id        = var.vpc_id
-  ingress_ports = var.ingress_ports
+  alb_name          = var.alb_name
+  subnet_ids        = var.subnet_ids
+  vpc_id            = var.vpc_id
+  alb_ingress_ports = var.alb_ingress_ports
 }

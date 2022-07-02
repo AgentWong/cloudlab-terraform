@@ -15,9 +15,9 @@ module "ec2" {
 module "alb" {
   source = "../../../base/network/alb"
 
-  alb_name     = var.alb_name
-  subnet_ids   = [var.subnet_ids[0], var.subnet_ids[1]]
-  vpc_id       = var.vpc_id
-  instance_ids = module.ec2.instance_ids
-  ingress_ports  = var.ingress_ports
+  alb_name          = var.alb_name
+  subnet_ids        = [var.subnet_ids[0], var.subnet_ids[1]]
+  vpc_id            = var.vpc_id
+  instance_ids      = module.ec2.instance_ids
+  alb_ingress_ports = var.alb_ingress_ports
 }
