@@ -39,22 +39,24 @@ variable "vpc_id" {
   description = "VPC ID"
   type        = string
 }
+variable "ingress_ports" {
+  description = "A list of port numbers to allow ingress traffic"
+  type        = list(number)
+}
+variable "target_group_arns" {
+  description = "The ARNs of load balancer target groups in which to register Instances"
+  type        = list(string)
+}
+variable "health_check_type" {
+  description = "The type of health check to perform. Must be one of: EC2, ELB."
+  type        = string
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "target_group_arns" {
-  description = "The ARNs of load balancer target groups in which to register Instances"
-  type        = list(string)
-  default     = []
-}
-variable "health_check_type" {
-  description = "The type of health check to perform. Must be one of: EC2, ELB."
-  type        = string
-  default     = "EC2"
-}
 variable "enable_autoscaling" {
   description = "If set to true, enable auto scaling"
   type        = bool
@@ -64,9 +66,4 @@ variable "user_data" {
   description = "The User Data script to run in each Instance at boot"
   type        = string
   default     = null
-}
-variable "ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
-  default     = [8080]
 }

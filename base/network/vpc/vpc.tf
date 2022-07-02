@@ -7,7 +7,7 @@ resource "aws_vpc" "this" {
     Name = "vpc-${var.prefix_name}_${var.region}"
   }
 }
-#Get all available AZ's in VPC
+#Get all available AZ's in region
 data "aws_availability_zones" "this" {
   state = "available"
 

@@ -2,8 +2,8 @@ resource "aws_launch_configuration" "this" {
   image_id        = data.aws_ami.instance.id
   instance_type   = var.instance_type
   security_groups = [aws_security_group.instance.id]
-  key_name = var.key_name
-  user_data = var.user_data
+  key_name        = var.key_name
+  user_data       = var.user_data
 
   lifecycle {
     create_before_destroy = true

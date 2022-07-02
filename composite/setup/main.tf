@@ -1,5 +1,5 @@
 module "kms" {
-  source = "../../base/compute/kms"
+  source = "../../base/compute/ec2-keypair"
 
   key_name   = var.key_name
   public_key = var.public_key
