@@ -51,7 +51,7 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "ingress_ports" {
+variable "alb_ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)
 }
