@@ -8,7 +8,7 @@ module "ec2" {
   instance_count = var.instance_count
   ami_owner      = var.ami_owner
   ami_name       = var.ami_name
-  subnet_id      = var.subnet1_id
+  subnet_id      = var.subnet_ids[0]
   vpc_id         = var.vpc_id
   ingress_ports  = var.ingress_ports
 }
@@ -16,7 +16,7 @@ module "alb" {
   source = "../../../base/network/alb"
 
   alb_name     = var.alb_name
-  subnet_ids   = [var.subnet1_id, var.subnet2_id]
+  subnet_ids   = [var.subnet_ids[0], var.subnet_ids[1]]
   vpc_id       = var.vpc_id
   instance_ids = module.ec2.instance_ids
   ingress_ports  = var.ingress_ports

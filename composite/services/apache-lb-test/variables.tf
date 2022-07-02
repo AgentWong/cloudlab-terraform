@@ -22,10 +22,6 @@ variable "ami_name" {
   description = "The AMI image name, include any wildcards"
   type        = string
 }
-variable "subnet_id" {
-  description = "The subnet ID to deploy to"
-  type        = string
-}
 variable "key_name" {
   description = "The EC2 keypair to use"
   type        = string
