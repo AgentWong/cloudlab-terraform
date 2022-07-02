@@ -3,6 +3,16 @@
 # You must provide a value for each of these parameters.
 # ---------------------------------------------------------------------------------------------------------------------
 
+# Shared
+variable "subnet_ids" {
+  description = "The subnet IDs to deploy to"
+  type        = list(string)
+}
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
+
 # ASG
 variable "cluster_name" {
   description = "The name to use for all the cluster resources"
@@ -28,16 +38,8 @@ variable "max_size" {
   description = "The maximum number of EC2 Instances in the ASG"
   type        = number
 }
-variable "subnet_ids" {
-  description = "The subnet IDs to deploy to"
-  type        = list(string)
-}
 variable "key_name" {
   description = "The EC2 keypair to use"
-  type        = string
-}
-variable "vpc_id" {
-  description = "VPC ID"
   type        = string
 }
 variable "ingress_ports" {
@@ -58,15 +60,6 @@ variable "alb_name" {
   description = "The name of the application load balancer"
   type        = string
 }
-variable "subnet_ids" {
-  description = "A list of subnet ids"
-  type        = list(string)
-}
-variable "vpc_id" {
-  description = "The VPC ID"
-  type        = string
-}
-
 variable "alb_ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)

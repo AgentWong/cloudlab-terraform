@@ -3,6 +3,12 @@
 # You must provide a value for each of these parameters.
 # ---------------------------------------------------------------------------------------------------------------------
 
+# Shared
+variable "vpc_id" {
+  description = "The VPC ID to deploy to"
+  type        = string
+}
+
 # EC2
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
@@ -28,10 +34,6 @@ variable "instance_count" {
   description = "The number of instances to deploy"
   type        = number
 }
-variable "vpc_id" {
-  description = "The VPC ID to deploy to"
-  type        = string
-}
 variable "ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)
@@ -46,11 +48,6 @@ variable "subnet_ids" {
   description = "A list of subnet ids"
   type        = list(string)
 }
-variable "vpc_id" {
-  description = "The VPC ID"
-  type        = string
-}
-
 variable "alb_ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)
