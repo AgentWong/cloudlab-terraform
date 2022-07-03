@@ -1,33 +1,35 @@
 # KMS
-variable "key_name" {}
-variable "public_key" {}
+variable "key_name" {
+  description = "The keyname"
+  type        = string
+}
+variable "public_key" {
+  description = "The public key material"
+  type        = string
+}
 
 # VPC
-variable "vpc_cidr" {
-  type        = string
-  description = "CIDR range for the VPC."
-  default     = null
-}
-variable "tgw_cidr" {
-  type        = string
-  description = "CIDR range for the transit gateway."
-  default     = null
-}
-variable "prefix_name" {
-  type        = string
-  description = "Name of the environment."
-  default     = null
-}
-variable "region" {
-  type        = string
-  description = "Region"
-  default     = "us-east-1"
-}
 variable "public_subnets" {
-  type        = list(string)
   description = "Public subnets"
+  type        = list(string)
 }
 variable "private_subnets" {
-  type        = list(string)
   description = "Private subnets"
+  type        = list(string)
+}
+variable "prefix_name" {
+  description = "Name of the environment."
+  type        = string
+}
+variable "vpc_cidr" {
+  description = "CIDR range for the VPC."
+  type        = string
+}
+variable "tgw_cidr" {
+  description = "CIDR range for the transit gateway."
+  type        = string
+}
+variable "region" {
+  description = "Region"
+  type        = string
 }

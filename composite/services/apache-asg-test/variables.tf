@@ -1,8 +1,3 @@
-# ---------------------------------------------------------------------------------------------------------------------
-# REQUIRED PARAMETERS
-# You must provide a value for each of these parameters.
-# ---------------------------------------------------------------------------------------------------------------------
-
 # Shared
 variable "subnet_ids" {
   description = "The subnet IDs to deploy to"
@@ -50,6 +45,10 @@ variable "health_check_type" {
   description = "The type of health check to perform. Must be one of: EC2, ELB."
   type        = string
 }
+variable "user_data" {
+  description = "The User Data script to run in each Instance at boot"
+  type        = string
+}
 
 # ALB
 variable "alb_name" {
@@ -60,27 +59,7 @@ variable "alb_ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL PARAMETERS
-# These parameters have reasonable defaults.
-# ---------------------------------------------------------------------------------------------------------------------
-
-# ASG
-variable "enable_autoscaling" {
-  description = "If set to true, enable auto scaling"
-  type        = bool
-  default     = false
-}
-variable "user_data" {
-  description = "The User Data script to run in each Instance at boot"
-  type        = string
-  default     = null
-}
-
-# ALB
 variable "instance_ids" {
   description = "The instance ids for the target group"
   type        = list(string)
-  default     = null
 }
