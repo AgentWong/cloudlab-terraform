@@ -146,3 +146,7 @@ function TableExists($tableName, $connection, $dbName) {
 }
 ?>                                     
 EOF
+
+cat > /var/www/html/index.html <<EOF
+<h1>${server_text}</h1>
+EOF

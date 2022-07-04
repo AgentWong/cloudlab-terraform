@@ -16,6 +16,7 @@ module "asg" {
   ami_name     = var.ami_name
   ami_owner    = var.ami_owner
   user_data = templatefile("${path.module}/user-data.sh", {
+    server_text = "This is a lamp test!"
     db_endpoint = "${module.rds-mysql.address}"
     db_password = "${data.aws_secretsmanager_secret_version.mysql_password.secret_string}"
   })
