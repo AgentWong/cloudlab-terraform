@@ -27,3 +27,7 @@ variable "instance_class" {
   description = "The instance class for the database"
   type        = string
 }
+variable "identifier_prefix" {
+  description = "The actual name to use for the database"
+  type        = string
+}
