@@ -30,7 +30,7 @@ module "alb" {
   alb_ingress_ports = var.alb_ingress_ports
 }
 module "secrets" {
-  source = "../../../secrets-manager"
+  source = "../../../base/secrets-manager"
 
   names = ["mysql_password"]
 }
