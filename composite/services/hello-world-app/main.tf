@@ -4,9 +4,9 @@ locals {
 module "alb" {
   source = "../../../base/network/alb"
 
-  alb_name          = var.service_name
-  subnet_ids        = var.subnet_ids
-  vpc_id            = var.vpc_id
+  alb_name         = var.service_name
+  subnet_ids       = var.subnet_ids
+  vpc_id           = var.vpc_id
   alb_ingress_port = 80
 }
 module "asg" {
@@ -27,6 +27,8 @@ module "asg" {
   target_group_arns  = [module.alb.target_group_arn]
   health_check_type  = var.health_check_type
   vpc_id             = var.vpc_id
+  ingress_ports      = [80]
+  security_group_id = aws_security_group.instance.id
 }
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
