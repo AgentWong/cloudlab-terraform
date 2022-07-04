@@ -40,7 +40,7 @@ module "rds-mysql" {
   engine             = "mysql"
   storage            = 10
   instance_class     = "db.t2.micro"
-  security_group_ids = aws_security_group.instance.id
+  security_group_id = aws_security_group.instance.id
 }
 module "secrets" {
   source = "../../../base/secrets-manager"
