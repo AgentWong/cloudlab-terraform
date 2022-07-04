@@ -7,7 +7,7 @@ module "alb" {
   alb_name          = var.service_name
   subnet_ids        = var.subnet_ids
   vpc_id            = var.vpc_id
-  alb_ingress_ports = 80
+  alb_ingress_port = 80
 }
 module "asg" {
   source = "../../../base/compute/asg"
@@ -26,7 +26,6 @@ module "asg" {
   subnet_ids         = var.subnet_ids
   target_group_arns  = [module.alb.target_group_arn]
   health_check_type  = var.health_check_type
-  ingress_ports      = var.ingress_ports
   vpc_id             = var.vpc_id
 }
 module "rds-mysql" {
