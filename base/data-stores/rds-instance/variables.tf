@@ -15,6 +15,10 @@ variable "db_password" {
   description = "The password for the database"
   type        = string
 }
+variable "db_port" {
+  description = "The port number used by the database"
+  type        = number
+}
 variable "engine" {
   description = "The engine for the database"
   type        = string

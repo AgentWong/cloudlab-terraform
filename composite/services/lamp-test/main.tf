@@ -35,15 +35,16 @@ module "asg" {
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
-  identifier_prefix = var.service_name
-  db_name           = "lamptest"
-  db_username       = "admin"
-  db_password       = data.aws_secretsmanager_secret_version.mysql_password.secret_string
-  engine            = "mysql"
-  storage           = 10
-  instance_class    = "db.t2.micro"
-  security_group_id = aws_security_group.instance.id
-  vpc_id            = var.vpc_id
+  identifier_prefix  = var.service_name
+  db_name            = "lamptest"
+  db_username        = "admin"
+  db_password        = data.aws_secretsmanager_secret_version.mysql_password.secret_string
+  db_port            = 3306
+  engine             = "mysql"
+  storage            = 10
+  instance_class     = "db.t2.micro"
+  security_group_id  = aws_security_group.instance.id
+  vpc_id             = var.vpc_id
   private_subnet_ids = var.private_subnet_ids
 }
 module "secrets" {

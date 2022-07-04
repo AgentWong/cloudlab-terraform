@@ -8,8 +8,8 @@ resource "aws_security_group_rule" "allow_inbound" {
   security_group_id        = aws_security_group.db.id
   source_security_group_id = var.security_group_id
 
-  from_port   = aws_db_instance.this.port
-  to_port     = aws_db_instance.this.port
+  from_port   = var.db_port
+  to_port     = var.db_port
   protocol    = "tcp"
 }
 resource "aws_security_group_rule" "allow_all_outbound" {
