@@ -55,3 +55,9 @@ variable "alb_ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)
 }
+
+# SM
+variable "path" {
+  description = "The path to organize secrets"
+  type        = string
+}

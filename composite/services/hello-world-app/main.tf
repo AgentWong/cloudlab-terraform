@@ -33,6 +33,7 @@ module "secrets" {
   source = "../../../base/secrets-manager"
 
   names = ["mysql_password"]
+  path = var.path
 }
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
