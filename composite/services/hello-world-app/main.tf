@@ -47,5 +47,5 @@ module "rds-mysql" {
 }
 
 data "aws_secretsmanager_secret_version" "mysql_password" {
-  secret_id = module.secrets.secret_ids["mysql_password"]
+  secret_id = module.secrets.secret_ids[0]
 }
