@@ -6,9 +6,9 @@ module "asg" {
   ami_owner    = var.ami_owner
   user_data = templatefile("${path.module}/user-data.sh", {
     server_text = "Hello World!"
-    db_address  = module.rds-mysql.address
-    db_port     = module.rds-mysql.port
-    server_port = var.alb_ingress_ports
+    db_address  = "${module.rds-mysql.address}"
+    db_port     = "${module.rds-mysql.port}"
+    server_port = "${var.alb_ingress_ports}"
   })
   key_name           = var.key_name
   instance_type      = var.instance_type
