@@ -7,7 +7,7 @@ module "alb" {
   alb_name          = var.service_name
   subnet_ids        = var.subnet_ids
   vpc_id            = var.vpc_id
-  alb_ingress_ports = var.alb_ingress_ports
+  alb_ingress_ports = 80
 }
 module "asg" {
   source = "../../../base/compute/asg"
@@ -17,8 +17,6 @@ module "asg" {
   ami_owner    = var.ami_owner
   user_data = templatefile("${path.module}/user-data.sh", {
     server_text = "Hello World!"
-    db_address  = "${module.rds-mysql.address}"
-    db_port     = "${local.db_port}"
   })
   key_name           = var.key_name
   instance_type      = var.instance_type
@@ -34,13 +32,14 @@ module "asg" {
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
-  identifier_prefix = var.service_name
-  db_name           = "helloworld"
-  db_username       = "admin"
-  db_password       = data.aws_secretsmanager_secret_version.mysql_password.secret_string
-  engine            = "mysql"
-  storage           = 10
-  instance_class    = "db.t2.micro"
+  identifier_prefix  = var.service_name
+  db_name            = "helloworld"
+  db_username        = "admin"
+  db_password        = data.aws_secretsmanager_secret_version.mysql_password.secret_string
+  engine             = "mysql"
+  storage            = 10
+  instance_class     = "db.t2.micro"
+  security_group_ids = aws_security_group.instance.id
 }
 module "secrets" {
   source = "../../../base/secrets-manager"

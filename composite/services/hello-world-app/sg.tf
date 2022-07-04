@@ -1,14 +1,22 @@
 resource "aws_security_group" "instance" {
-  name   = var.instance_name
+  name   = var.service_name
   vpc_id = var.vpc_id
 }
-resource "aws_security_group_rule" "allow_inbound" {
-  for_each          = { for k, v in var.ingress_ports : v => v }
+resource "aws_security_group_rule" "ssh_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
 
-  from_port   = each.value
-  to_port     = each.value
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = var.linux_mgmt_cidr
+}
+resource "aws_security_group_rule" "allow_inbound" {
+  type              = "ingress"
+  security_group_id = aws_security_group.instance.id
+
+  from_port   = 80
+  to_port     = 80
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }

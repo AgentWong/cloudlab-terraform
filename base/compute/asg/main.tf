@@ -1,7 +1,7 @@
 resource "aws_launch_configuration" "this" {
   image_id        = data.aws_ami.instance.id
   instance_type   = var.instance_type
-  security_groups = [aws_security_group.instance.id]
+  security_groups = [var.security_group_id]
   key_name        = var.key_name
   user_data       = var.user_data
 

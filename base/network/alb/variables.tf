@@ -3,9 +3,9 @@
 # You must provide a value for each of these parameters.
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "alb_ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
+variable "alb_ingress_port" {
+  description = "Port numbers to allow ingress traffic to ALB"
+  type        = number
 }
 variable "alb_name" {
   description = "The name of the application load balancer"

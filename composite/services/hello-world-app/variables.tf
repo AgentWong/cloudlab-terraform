@@ -12,12 +12,6 @@ variable "vpc_id" {
   type        = string
 }
 
-# ALB
-variable "alb_ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
-}
-
 # ASG
 variable "ami_owner" {
   description = "The owner ID or alias for the account that owns the AMI"
@@ -30,10 +24,6 @@ variable "ami_name" {
 variable "health_check_type" {
   description = "The type of health check to perform. Must be one of: EC2, ELB."
   type        = string
-}
-variable "ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
 }
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
@@ -50,6 +40,10 @@ variable "max_size" {
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
+}
+variable "linux_mgmt_cidr" {
+  description = "CIDR block to allow SSH access."
+  type        = list(string)
 }
 
 # SM

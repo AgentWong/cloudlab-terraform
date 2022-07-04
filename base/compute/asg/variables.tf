@@ -52,6 +52,10 @@ variable "vpc_id" {
   description = "VPC ID"
   type        = string
 }
+variable "security_group_id" {
+  description = "The security group id to associate with the instances"
+  type        = string
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS

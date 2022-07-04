@@ -11,10 +11,6 @@ variable "ami_owner" {
   description = "The owner ID or alias for the account that owns the AMI"
   type        = string
 }
-variable "ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
-}
 variable "instance_count" {
   description = "The number of instances to deploy"
   type        = number
@@ -33,6 +29,10 @@ variable "subnet_id" {
 }
 variable "vpc_id" {
   description = "The VPC ID to deploy to"
+  type        = string
+}
+variable "security_group_id" {
+  description = "The security group id to associate with the instances"
   type        = string
 }
 
