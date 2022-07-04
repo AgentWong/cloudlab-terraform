@@ -39,3 +39,7 @@ variable "vpc_id" {
   description = "The VPC ID"
   type        = string
 }
+variable "private_subnet_id" {
+  description = "A private subnet ID to deploy the DB instance in"
+  type        = string
+}

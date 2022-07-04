@@ -8,4 +8,9 @@ resource "aws_db_instance" "this" {
   password               = var.db_password
   skip_final_snapshot    = true
   vpc_security_group_ids = [var.security_group_id]
+  publicly_accessible = false
+}
+resource "aws_db_subnet_group" "this" {
+  name       = "main"
+  subnet_ids = [var.private_subnet_id]
 }

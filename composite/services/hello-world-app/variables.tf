@@ -46,6 +46,12 @@ variable "linux_mgmt_cidr" {
   type        = list(string)
 }
 
+# RDS
+variable "private_subnet_id" {
+  description = "A private subnet ID to deploy the DB instance in"
+  type        = string
+}
+
 # SM
 variable "path" {
   description = "The path to organize secrets"

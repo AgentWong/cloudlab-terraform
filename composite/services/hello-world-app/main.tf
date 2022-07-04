@@ -42,6 +42,7 @@ module "rds-mysql" {
   instance_class    = "db.t2.micro"
   security_group_id = aws_security_group.instance.id
   vpc_id            = var.vpc_id
+  private_subnet_id = var.private_subnet_id
 }
 module "secrets" {
   source = "../../../base/secrets-manager"
