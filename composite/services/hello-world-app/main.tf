@@ -42,7 +42,7 @@ module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
   identifier_prefix = var.service_name
-  db_name           = "mysql"
+  db_name           = "helloworld"
   db_username       = "admin"
   db_password       = data.aws_secretsmanager_secret_version.mysql_password.secret_string
   engine            = "mysql"
