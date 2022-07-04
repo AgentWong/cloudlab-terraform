@@ -45,7 +45,7 @@ variable "min_upper" {
 variable "override_special" {
   description = "Limit special characters to these"
   type        = string
-  default     = "_%@!"
+  default     = "_%!"
 }
 variable "special" {
   description = "Whether or not to include special characters in random password string"
