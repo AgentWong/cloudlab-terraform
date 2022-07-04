@@ -43,7 +43,7 @@ module "rds-mysql" {
 
   db_name        = var.service_name
   db_username    = "admin"
-  db_password    = jsondecode(data.aws_secretsmanager_secret_version.mysql_password.secret_string)
+  db_password    = data.aws_secretsmanager_secret_version.mysql_password.secret_string
   engine         = "mysql"
   storage        = 10
   instance_class = "db.t2.micro"
