@@ -35,7 +35,7 @@ module "secrets" {
   names = ["mysql_password"]
 }
 module "rds-mysql" {
-  source = "../../../data-stores/rds-instance"
+  source = "../../../base/data-stores/rds-instance"
 
   db_name        = var.service_name
   db_username    = "admin"
