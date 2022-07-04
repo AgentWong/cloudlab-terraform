@@ -3,6 +3,24 @@ variable "vpc_id" {
   description = "The VPC ID to deploy to"
   type        = string
 }
+variable "service_name" {
+  description = "The name to use for this service module resources"
+  type        = string
+}
+variable "subnet_ids" {
+  description = "A list of subnet ids"
+  type        = list(string)
+}
+
+# ALB
+variable "alb_ingress_ports" {
+  description = "A list of port numbers to allow ingress traffic"
+  type        = list(number)
+}
+variable "instance_ids" {
+  description = "The instance ids for the target group"
+  type        = list(string)
+}
 
 # EC2
 variable "instance_type" {
@@ -32,26 +50,4 @@ variable "ingress_ports" {
 variable "user_data" {
   description = "The User Data script to run in each Instance at boot"
   type        = string
-}
-variable "instance_name" {
-  description = "The name of the instance"
-  type        = string
-}
-
-# ALB
-variable "alb_name" {
-  description = "The name of the application load balancer"
-  type        = string
-}
-variable "subnet_ids" {
-  description = "A list of subnet ids"
-  type        = list(string)
-}
-variable "alb_ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
-}
-variable "instance_ids" {
-  description = "The instance ids for the target group"
-  type        = list(string)
 }

@@ -1,6 +1,14 @@
 locals {
   db_port = tostring(module.rds-mysql.port)
 }
+module "alb" {
+  source = "../../../base/network/alb"
+
+  alb_name          = var.service_name
+  subnet_ids        = var.subnet_ids
+  vpc_id            = var.vpc_id
+  alb_ingress_ports = var.alb_ingress_ports
+}
 module "asg" {
   source = "../../../base/compute/asg"
 
@@ -24,20 +32,6 @@ module "asg" {
   ingress_ports      = var.ingress_ports
   vpc_id             = var.vpc_id
 }
-module "alb" {
-  source = "../../../base/network/alb"
-
-  alb_name          = var.service_name
-  subnet_ids        = var.subnet_ids
-  vpc_id            = var.vpc_id
-  alb_ingress_ports = var.alb_ingress_ports
-}
-module "secrets" {
-  source = "../../../base/secrets-manager"
-
-  names = ["mysql_password"]
-  path  = var.path
-}
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
@@ -48,6 +42,12 @@ module "rds-mysql" {
   engine            = "mysql"
   storage           = 10
   instance_class    = "db.t2.micro"
+}
+module "secrets" {
+  source = "../../../base/secrets-manager"
+
+  names = ["mysql_password"]
+  path  = var.path
 }
 
 data "aws_secretsmanager_secret_version" "mysql_password" {

@@ -15,15 +15,15 @@ variable "prefix_name" {
   description = "Name of the environment."
   type        = string
 }
-variable "vpc_cidr" {
-  description = "CIDR range for the VPC."
+variable "region" {
+  description = "Region"
   type        = string
 }
 variable "tgw_cidr" {
   description = "CIDR range for the transit gateway."
   type        = string
 }
-variable "region" {
-  description = "Region"
+variable "vpc_cidr" {
+  description = "CIDR range for the VPC."
   type        = string
 }

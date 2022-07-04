@@ -9,27 +9,27 @@ variable "public_key" {
 }
 
 # VPC
-variable "public_subnets" {
-  description = "Public subnets"
-  type        = list(string)
+variable "prefix_name" {
+  description = "Name of the environment."
+  type        = string
 }
 variable "private_subnets" {
   description = "Private subnets"
   type        = list(string)
 }
-variable "prefix_name" {
-  description = "Name of the environment."
-  type        = string
+variable "public_subnets" {
+  description = "Public subnets"
+  type        = list(string)
 }
-variable "vpc_cidr" {
-  description = "CIDR range for the VPC."
+variable "region" {
+  description = "Region"
   type        = string
 }
 variable "tgw_cidr" {
   description = "CIDR range for the transit gateway."
   type        = string
 }
-variable "region" {
-  description = "Region"
+variable "vpc_cidr" {
+  description = "CIDR range for the VPC."
   type        = string
 }

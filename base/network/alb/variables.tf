@@ -3,6 +3,10 @@
 # You must provide a value for each of these parameters.
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "alb_ingress_ports" {
+  description = "A list of port numbers to allow ingress traffic"
+  type        = list(number)
+}
 variable "alb_name" {
   description = "The name of the application load balancer"
   type        = string
@@ -14,11 +18,6 @@ variable "subnet_ids" {
 variable "vpc_id" {
   description = "The VPC ID"
   type        = string
-}
-
-variable "alb_ingress_ports" {
-  description = "A list of port numbers to allow ingress traffic"
-  type        = list(number)
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

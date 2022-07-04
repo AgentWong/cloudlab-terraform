@@ -1,7 +1,15 @@
+module "alb" {
+  source = "../../../base/network/alb"
+
+  alb_name          = var.service_name
+  subnet_ids        = var.subnet_ids
+  vpc_id            = var.vpc_id
+  alb_ingress_ports = var.alb_ingress_ports
+}
 module "asg" {
   source = "../../../base/compute/asg"
 
-  cluster_name       = var.cluster_name
+  cluster_name       = var.service_name
   ami_name           = var.ami_name
   ami_owner          = var.ami_owner
   user_data          = var.user_data
@@ -15,13 +23,4 @@ module "asg" {
   health_check_type  = var.health_check_type
   ingress_ports      = var.ingress_ports
   vpc_id             = var.vpc_id
-}
-
-module "alb" {
-  source = "../../../base/network/alb"
-
-  alb_name          = var.alb_name
-  subnet_ids        = var.subnet_ids
-  vpc_id            = var.vpc_id
-  alb_ingress_ports = var.alb_ingress_ports
 }
