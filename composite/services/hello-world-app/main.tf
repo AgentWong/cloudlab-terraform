@@ -1,6 +1,5 @@
 locals {
   db_port = tostring(module.rds-mysql.port)
-  server_port = tostring(var.alb_ingress_ports)
 }
 module "asg" {
   source = "../../../base/compute/asg"
@@ -12,7 +11,7 @@ module "asg" {
     server_text = "Hello World!"
     db_address  = "${module.rds-mysql.address}"
     db_port     = "${local.db_port}"
-    server_port = "${local.server_port}"
+    server_port = "80"
   })
   key_name           = var.key_name
   instance_type      = var.instance_type
