@@ -1,6 +1,6 @@
 resource "aws_secretsmanager_secret" "this" {
   for_each = { for k, v in var.names : v => v }
-  name     = "${var.path}${each.value}"
+  name     = "${var.path}/${each.value}"
 }
 resource "aws_secretsmanager_secret_version" "this" {
   for_each      = { for k, v in var.names : v => v }
