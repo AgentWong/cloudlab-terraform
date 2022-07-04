@@ -17,7 +17,7 @@ cat > /var/www/inc/dbinfo.inc <<EOF
 <?php
 
 define('DB_SERVER', '${db_endpoint}');
-define('DB_USERNAME', 'tutorial_user');
+define('DB_USERNAME', 'admin');
 define('DB_PASSWORD', '${db_password}');
 define('DB_DATABASE', 'lamptest');
 
