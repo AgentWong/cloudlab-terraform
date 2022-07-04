@@ -13,5 +13,5 @@ resource "aws_db_instance" "this" {
 }
 resource "aws_db_subnet_group" "this" {
   name       = var.identifier_prefix
-  subnet_ids = [var.private_subnet_id]
+  subnet_ids = [var.private_subnet_ids[0], var.private_subnet_ids[1]]
 }
