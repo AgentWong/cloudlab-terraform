@@ -17,10 +17,6 @@ variable "alb_ingress_ports" {
   description = "A list of port numbers to allow ingress traffic"
   type        = list(number)
 }
-variable "instance_ids" {
-  description = "The instance ids for the target group"
-  type        = list(string)
-}
 
 # EC2
 variable "instance_type" {
