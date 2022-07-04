@@ -19,7 +19,6 @@ module "asg" {
     server_text = "Hello World!"
     db_address  = "${module.rds-mysql.address}"
     db_port     = "${local.db_port}"
-    server_port = "80"
   })
   key_name           = var.key_name
   instance_type      = var.instance_type
