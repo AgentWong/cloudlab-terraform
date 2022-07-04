@@ -28,19 +28,20 @@ module "asg" {
   health_check_type  = var.health_check_type
   vpc_id             = var.vpc_id
   ingress_ports      = [80]
-  security_group_id = aws_security_group.instance.id
+  security_group_id  = aws_security_group.instance.id
 }
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
-  identifier_prefix  = var.service_name
-  db_name            = "helloworld"
-  db_username        = "admin"
-  db_password        = data.aws_secretsmanager_secret_version.mysql_password.secret_string
-  engine             = "mysql"
-  storage            = 10
-  instance_class     = "db.t2.micro"
+  identifier_prefix = var.service_name
+  db_name           = "helloworld"
+  db_username       = "admin"
+  db_password       = data.aws_secretsmanager_secret_version.mysql_password.secret_string
+  engine            = "mysql"
+  storage           = 10
+  instance_class    = "db.t2.micro"
   security_group_id = aws_security_group.instance.id
+  vpc_id            = var.vpc_id
 }
 module "secrets" {
   source = "../../../base/secrets-manager"

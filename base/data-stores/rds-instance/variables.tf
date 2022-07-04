@@ -35,3 +35,7 @@ variable "security_group_id" {
   description = "The security group id to associate with the database"
   type        = string
 }
+variable "vpc_id" {
+  description = "The VPC ID"
+  type        = string
+}
