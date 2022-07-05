@@ -5,9 +5,6 @@ resource "aws_launch_configuration" "this" {
   key_name        = var.key_name
   user_data       = var.user_data
 
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 resource "aws_autoscaling_group" "this" {
   name = "${var.cluster_name}-asg-${aws_launch_configuration.this.name}"
@@ -22,9 +19,6 @@ resource "aws_autoscaling_group" "this" {
 
   min_elb_capacity = var.min_size
 
-  lifecycle {
-    create_before_destroy = true
-  }
   tag {
     key                 = "Name"
     value               = var.cluster_name
