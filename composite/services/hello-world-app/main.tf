@@ -37,6 +37,7 @@ module "rds-mysql" {
   db_name            = "helloworld"
   db_username        = "admin"
   db_password        = data.aws_secretsmanager_secret_version.mysql_password.secret_string
+  db_port            = 3306
   engine             = "mysql"
   storage            = 10
   instance_class     = "db.t2.micro"
