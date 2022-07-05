@@ -17,6 +17,8 @@ module "asg" {
   ami_owner    = var.ami_owner
   user_data = templatefile("${path.module}/user-data.sh", {
     server_text = "This is a lamp test!  View PHP at SamplePage.php"
+    db_address  = "${module.rds-mysql.address}"
+    db_port     = "${tostring(module.rds-mysql.port)}"
     db_endpoint = "${module.rds-mysql.address}"
     db_password = "${data.aws_secretsmanager_secret_version.mysql_password.secret_string}"
   })
@@ -25,7 +27,7 @@ module "asg" {
   min_size           = var.min_size
   max_size           = var.max_size
   enable_autoscaling = false
-  subnet_id         = var.subnet_ids[0]
+  subnet_id          = var.subnet_ids[0]
   target_group_arns  = [module.alb.target_group_arn]
   health_check_type  = var.health_check_type
   vpc_id             = var.vpc_id

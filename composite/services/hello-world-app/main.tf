@@ -18,6 +18,8 @@ module "asg" {
   ami_owner         = var.ami_owner
   user_data = templatefile("${path.module}/user-data.sh", {
     server_text = "Hello World!"
+    db_address  = "${module.rds-mysql.address}"
+    db_port     = "${tostring(module.rds-mysql.port)}"
   })
   key_name           = var.key_name
   instance_type      = var.instance_type
