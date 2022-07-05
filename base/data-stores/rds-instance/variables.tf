@@ -47,3 +47,14 @@ variable "private_subnet_ids" {
   description = "A private subnet ID to deploy the DB instance in"
   type        = list(string)
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL PARAMETERS
+# These parameters have reasonable defaults.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "availability_zone" {
+  description = "The availability zone to deploy instances in"
+  type        = string
+  default     = null
+}

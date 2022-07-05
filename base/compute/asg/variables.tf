@@ -72,3 +72,8 @@ variable "user_data" {
   type        = string
   default     = null
 }
+variable "availability_zone" {
+  description = "The availability zone to deploy instances in"
+  type        = string
+  default     = null
+}

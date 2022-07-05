@@ -12,9 +12,10 @@ module "alb" {
 module "asg" {
   source = "../../../base/compute/asg"
 
-  cluster_name = var.service_name
-  ami_name     = var.ami_name
-  ami_owner    = var.ami_owner
+  availability_zone = data.aws_availability_zones.this.names[0]
+  cluster_name      = var.service_name
+  ami_name          = var.ami_name
+  ami_owner         = var.ami_owner
   user_data = templatefile("${path.module}/user-data.sh", {
     server_text = "Hello World!"
   })
@@ -33,15 +34,16 @@ module "asg" {
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
-  identifier_prefix = var.service_name
-  db_name           = "helloworld"
-  db_username       = "admin"
-  db_password       = data.aws_secretsmanager_secret_version.mysql_password.secret_string
-  engine            = "mysql"
-  storage           = 10
-  instance_class    = "db.t2.micro"
-  security_group_id = aws_security_group.instance.id
-  vpc_id            = var.vpc_id
+  availability_zone  = data.aws_availability_zones.this.names[0]
+  identifier_prefix  = var.service_name
+  db_name            = "helloworld"
+  db_username        = "admin"
+  db_password        = data.aws_secretsmanager_secret_version.mysql_password.secret_string
+  engine             = "mysql"
+  storage            = 10
+  instance_class     = "db.t2.micro"
+  security_group_id  = aws_security_group.instance.id
+  vpc_id             = var.vpc_id
   private_subnet_ids = var.private_subnet_ids
 }
 module "secrets" {
@@ -53,4 +55,14 @@ module "secrets" {
 
 data "aws_secretsmanager_secret_version" "mysql_password" {
   secret_id = module.secrets.secret_ids[0]
+}
+#Get all available AZ's in region
+data "aws_availability_zones" "this" {
+  state = "available"
+
+  # Exclude local availability zones.
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
 }
