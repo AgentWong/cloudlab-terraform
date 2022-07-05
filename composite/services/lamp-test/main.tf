@@ -1,6 +1,3 @@
-locals {
-  db_port = tostring(module.rds-mysql.port)
-}
 module "alb" {
   source = "../../../base/network/alb"
 

@@ -1,11 +1,11 @@
 module "alb" {
   source = "../../../base/network/alb"
 
-  alb_name          = var.service_name
-  subnet_ids        = [var.subnet_ids[0], var.subnet_ids[1]]
-  vpc_id            = var.vpc_id
-  instance_ids      = module.ec2.instance_ids
-  alb_ingress_ports = var.alb_ingress_ports
+  alb_name         = var.service_name
+  subnet_ids       = var.subnet_ids
+  vpc_id           = var.vpc_id
+  instance_ids     = module.ec2.instance_ids
+  alb_ingress_port = 80
 }
 module "ec2" {
   source = "../../../base/compute/ec2"

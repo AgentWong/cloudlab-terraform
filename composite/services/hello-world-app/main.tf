@@ -1,6 +1,3 @@
-locals {
-  db_port = tostring(module.rds-mysql.port)
-}
 module "alb" {
   source = "../../../base/network/alb"
 
@@ -26,7 +23,7 @@ module "asg" {
   min_size           = var.min_size
   max_size           = var.max_size
   enable_autoscaling = false
-  subnet_ids         = var.subnet_ids
+  subnet_id          = var.subnet_ids[0]
   target_group_arns  = [module.alb.target_group_arn]
   health_check_type  = var.health_check_type
   vpc_id             = var.vpc_id
@@ -36,7 +33,6 @@ module "asg" {
 module "rds-mysql" {
   source = "../../../base/data-stores/rds-instance"
 
-  availability_zone  = data.aws_availability_zones.this.names[0]
   identifier_prefix  = var.service_name
   db_name            = "helloworld"
   db_username        = "admin"
@@ -57,14 +53,4 @@ module "secrets" {
 
 data "aws_secretsmanager_secret_version" "mysql_password" {
   secret_id = module.secrets.secret_ids[0]
-}
-#Get all available AZ's in region
-data "aws_availability_zones" "this" {
-  state = "available"
-
-  # Exclude local availability zones.
-  filter {
-    name   = "opt-in-status"
-    values = ["opt-in-not-required"]
-  }
 }
