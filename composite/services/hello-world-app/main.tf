@@ -9,7 +9,6 @@ module "alb" {
 module "asg" {
   source = "../../../base/compute/asg"
 
-  availability_zone = data.aws_availability_zones.this.names[0]
   cluster_name      = var.service_name
   ami_name          = var.ami_name
   ami_owner         = var.ami_owner
