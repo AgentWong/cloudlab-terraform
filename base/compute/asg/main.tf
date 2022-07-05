@@ -12,9 +12,8 @@ resource "aws_launch_configuration" "this" {
 resource "aws_autoscaling_group" "this" {
   name = "${var.cluster_name}-asg-${aws_launch_configuration.this.name}"
 
-  availability_zones   = [var.availability_zone]
   launch_configuration = aws_launch_configuration.this.name
-  vpc_zone_identifier  = var.subnet_ids
+  vpc_zone_identifier  = [var.subnet_id]
   target_group_arns    = var.target_group_arns
   health_check_type    = var.health_check_type
 

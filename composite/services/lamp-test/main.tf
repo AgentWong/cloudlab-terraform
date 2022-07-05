@@ -25,7 +25,7 @@ module "asg" {
   min_size           = var.min_size
   max_size           = var.max_size
   enable_autoscaling = false
-  subnet_ids         = var.subnet_ids
+  subnet_ids         = var.subnet_ids[0]
   target_group_arns  = [module.alb.target_group_arn]
   health_check_type  = var.health_check_type
   vpc_id             = var.vpc_id

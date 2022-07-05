@@ -40,9 +40,9 @@ variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
 }
-variable "subnet_ids" {
-  description = "The subnet IDs to deploy to"
-  type        = list(string)
+variable "subnet_id" {
+  description = "The subnet ID to deploy to"
+  type        = string
 }
 variable "target_group_arns" {
   description = "The ARNs of load balancer target groups in which to register Instances"
