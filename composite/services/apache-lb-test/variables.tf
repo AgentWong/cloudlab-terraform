@@ -47,3 +47,7 @@ variable "user_data" {
   description = "The User Data script to run in each Instance at boot"
   type        = string
 }
+variable "linux_mgmt_cidr" {
+  description = "CIDR block to allow SSH access."
+  type        = list(string)
+}
