@@ -1,5 +1,5 @@
 locals {
-  instance_name = toset([for i in range(1,var.instance_count+1) : format("%s%02d", var.instance_name, i)])
+  instance_name = toset([for i in range(1,var.instance_count+1) : format("%s-%02d", var.instance_name, i)])
 }
 resource "aws_instance" "this" {
   for_each               = local.instance_name
