@@ -1,3 +1,3 @@
 output "instance_ids" {
-  value = aws_instance.this.*.id
+  value = values(aws_instance.this)[*].id
 }
