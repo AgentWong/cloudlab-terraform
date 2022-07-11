@@ -23,6 +23,14 @@ variable "key_name" {
   description = "The EC2 keypair to use"
   type        = string
 }
+variable "operating_system" {
+  description = "The OS type, either Windows or Linux"
+  type        = string
+  validation {
+    condition     = var.operating_system == "Windows" || var.operating_system == "Linux"
+    error_message = "Must be either Windows or Linux"
+  }
+}
 variable "subnet_id" {
   description = "The subnet ID to deploy to"
   type        = string
@@ -31,9 +39,9 @@ variable "vpc_id" {
   description = "The VPC ID to deploy to"
   type        = string
 }
-variable "security_group_id" {
+variable "security_group_ids" {
   description = "The security group id to associate with the instances"
-  type        = string
+  type        = list(string)
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -41,6 +49,11 @@ variable "security_group_id" {
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "get_password_data" {
+  description = "Whether or not to get password for Windows instances"
+  type        = bool
+  default     = false
+}
 variable "instance_name" {
   description = "The name of the instance"
   type        = string
