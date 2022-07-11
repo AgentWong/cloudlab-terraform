@@ -25,7 +25,7 @@ resource "aws_security_group" "linux_mgmt" {
   name   = var.service_name
   vpc_id = var.vpc_id
 }
-resource "aws_security_group_rule" "ssh_inbound" {
+resource "aws_security_group_rule" "ssh_mgmt_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.linux_mgmt.id
 
@@ -39,7 +39,7 @@ resource "aws_security_group" "winrm_mgmt" {
   name   = var.service_name
   vpc_id = var.vpc_id
 }
-resource "aws_security_group_rule" "winrm_inbound" {
+resource "aws_security_group_rule" "winrm_mgmt_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.winrm_mgmt.id
 
