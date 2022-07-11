@@ -15,7 +15,7 @@ module "vpc" {
   private_subnets = var.private_subnets
 }
 module "ansible-bastion" {
-  source = "../../../base/compute/ec2"
+  source = "../../base/compute/ec2"
 
   key_name          = module.kms.key_name
   instance_name     = "ansible-bastion"
