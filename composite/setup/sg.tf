@@ -1,6 +1,6 @@
 resource "aws_security_group" "instance" {
   name   = var.service_name
-  vpc_id = var.vpc_id
+  vpc_id = module.vpc.vpc_id
 }
 resource "aws_security_group_rule" "ssh_inbound" {
   type              = "ingress"
@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 
 resource "aws_security_group" "linux_mgmt" {
   name   = var.service_name
-  vpc_id = var.vpc_id
+  vpc_id = module.vpc.vpc_id
 }
 resource "aws_security_group_rule" "ssh_mgmt_inbound" {
   type              = "ingress"
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "ssh_mgmt_inbound" {
 
 resource "aws_security_group" "winrm_mgmt" {
   name   = var.service_name
-  vpc_id = var.vpc_id
+  vpc_id = module.vpc.vpc_id
 }
 resource "aws_security_group_rule" "winrm_mgmt_inbound" {
   type              = "ingress"
