@@ -49,6 +49,11 @@ variable "security_group_ids" {
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "associate_public_ip_address" {
+  description = "Whether to associate a public IP address with an instance in a VPC."
+  type        = bool
+  default     = null
+}
 variable "get_password_data" {
   description = "Whether or not to get password for Windows instances"
   type        = bool

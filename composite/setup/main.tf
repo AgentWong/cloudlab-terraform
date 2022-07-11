@@ -17,17 +17,18 @@ module "vpc" {
 module "ansible-bastion" {
   source = "../../base/compute/ec2"
 
-  key_name          = module.kms.key_name
-  instance_name     = "ansible-bastion"
-  instance_type     = "t3.micro"
-  instance_count    = 1
-  ami_owner         = "amazon"
-  ami_name          = "amzn2-ami-hvm*x86_64*gp2"
-  operating_system  = "Linux"
-  subnet_id         = module.vpc.public_subnets[0]
-  vpc_id            = module.vpc.vpc_id
-  security_group_ids = [aws_security_group.instance.id]
-  user_data         = <<EOF
+  key_name                    = module.kms.key_name
+  instance_name               = "ansible-bastion"
+  instance_type               = "t3.micro"
+  instance_count              = 1
+  associate_public_ip_address = true
+  ami_owner                   = "amazon"
+  ami_name                    = "amzn2-ami-hvm*x86_64*gp2"
+  operating_system            = "Linux"
+  subnet_id                   = module.vpc.public_subnets[0]
+  vpc_id                      = module.vpc.vpc_id
+  security_group_ids          = [aws_security_group.instance.id]
+  user_data                   = <<EOF
     yum update -y
     amazon-linux-extras enable ansible2
     yum install -y ansible git
