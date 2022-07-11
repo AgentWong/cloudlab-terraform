@@ -33,3 +33,9 @@ variable "vpc_cidr" {
   description = "CIDR range for the VPC."
   type        = string
 }
+
+# Ansible Bastion
+variable "linux_mgmt_cidr" {
+  description = "CIDR block to allow SSH access."
+  type        = list(string)
+}

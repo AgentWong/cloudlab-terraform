@@ -19,10 +19,10 @@ module "ansible-bastion" {
 
   key_name          = module.kms.key_name
   instance_name     = "ansible-bastion"
-  instance_type     = var.instance_type
+  instance_type     = "t3.micro"
   instance_count    = 1
-  ami_owner         = var.ami_owner
-  ami_name          = var.ami_name
+  ami_owner         = "amazon"
+  ami_name          = "amzn2-ami-hvm*x86_64*gp2"
   operating_system  = "Linux"
   subnet_id         = module.vpc.public_subnets[0]
   vpc_id            = module.vpc.vpc_id
