@@ -29,6 +29,7 @@ module "ansible-bastion" {
   vpc_id                      = module.vpc.vpc_id
   security_group_ids          = [aws_security_group.instance.id]
   user_data                   = <<EOF
+    #!/bin/bash
     yum update -y
     amazon-linux-extras enable ansible2
     yum install -y ansible git
