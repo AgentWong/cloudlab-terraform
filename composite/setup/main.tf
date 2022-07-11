@@ -26,7 +26,7 @@ module "ansible-bastion" {
   operating_system  = "Linux"
   subnet_id         = module.vpc.public_subnets[0]
   vpc_id            = module.vpc.vpc_id
-  security_group_id = aws_security_group.instance.id
+  security_group_ids = [aws_security_group.instance.id]
   user_data         = <<EOF
     yum update -y
     amazon-linux-extras enable ansible2
