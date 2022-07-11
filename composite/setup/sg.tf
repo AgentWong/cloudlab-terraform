@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance" {
-  name   = var.service_name
+  name   = "${var.prefix_name}-ansible-bastion"
   vpc_id = module.vpc.vpc_id
 }
 resource "aws_security_group_rule" "ssh_inbound" {
@@ -22,7 +22,7 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 }
 
 resource "aws_security_group" "linux_mgmt" {
-  name   = var.service_name
+  name   = "${var.prefix_name}-linux-mgmt"
   vpc_id = module.vpc.vpc_id
 }
 resource "aws_security_group_rule" "ssh_mgmt_inbound" {
@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "ssh_mgmt_inbound" {
 }
 
 resource "aws_security_group" "winrm_mgmt" {
-  name   = var.service_name
+  name   = "${var.prefix_name}-winrm-mgmt"
   vpc_id = module.vpc.vpc_id
 }
 resource "aws_security_group_rule" "winrm_mgmt_inbound" {
