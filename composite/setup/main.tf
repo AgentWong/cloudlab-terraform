@@ -21,6 +21,7 @@ module "ansible-bastion" {
   instance_name               = "ansible-bastion"
   instance_type               = "t3.micro"
   instance_count              = 1
+  iam_instance_profile        = aws_iam_instance_profile.name
   associate_public_ip_address = true
   ami_owner                   = "amazon"
   ami_name                    = "amzn2-ami-hvm*x86_64*gp2"
