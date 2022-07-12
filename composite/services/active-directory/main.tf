@@ -39,7 +39,8 @@ resource "null_resource" "ansible_pdc" {
   }
 
   provisioner "remote-exec" {
-    inline = templatefile("${path.module}/../../../templates/run_playbook.tftpl",{
+    inline = <<EOF
+    templatefile("${path.module}/../../../templates/run_playbook.tftpl",{
       ansible_playbook = "windows-setup-pdc.yml"
       ansible_password = rsadecrypt(module.pdc.password_data[0],file("~/.ssh/id_rsa"))
       vars = {
@@ -51,6 +52,7 @@ resource "null_resource" "ansible_pdc" {
         reverse_lookup_zone = "${strrev(regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b",module.pdc.private_ips[0]))}.in-addr.arpa"
       }
     })
+    EOF
   }
   depends_on = [
     module.pdc
