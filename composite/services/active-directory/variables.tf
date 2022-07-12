@@ -1,4 +1,8 @@
 # Ansible vars
+variable "ansible_bastion_public_dns" {
+  description = "Public DNS name of the Ansible bastion host"
+  type        = string
+}
 variable "domain_name" {
   description = "The domain name"
   type        = string

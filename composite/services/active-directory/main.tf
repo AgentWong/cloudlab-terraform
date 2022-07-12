@@ -35,19 +35,19 @@ resource "null_resource" "ansible_pdc" {
     type        = "ssh"
     user        = "ec2-user"
     private_key = file("~/.ssh/id_rsa")
-    host        = aws_eip.ansible-bastion.public_dns
+    host        = var.ansible_bastion_public_dns
   }
 
   provisioner "remote-exec" {
     inline = templatefile("${path.module}/../../../../run_playbook.tftpl",{
       ansible_password = rsadecrypt(module.pdc.password_data[0],file("~/.ssh/id_rsa"))
       vars = {
-        amazon_dns = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b",module.pdc.private_ip[0])}.0.2"
+        amazon_dns = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b",module.pdc.private_ips[0])}.0.2"
         pdc_hostname = module.pdc.private_ips[0]
         domain = var.domain_name #valhalla.local
         netbios = var.netbios #VALHALLA
         password = data.aws_secretsmanager_secret_version.radmin_password.secret_string
-        reverse_lookup_zone = "${strrev(regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b",module.pdc.private_ip[0]))}.in-addr.arpa"
+        reverse_lookup_zone = "${strrev(regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b",module.pdc.private_ips[0]))}.in-addr.arpa"
       }
     })
   }
