@@ -14,7 +14,7 @@ cd ~/ansible
 git pull
 export ANSIBLE_PASSWORD=${ansible_password}
 ansible-playbook
-%{ for k,v in ${vars} ~}
+%{ for k,v in vars ~}
 -e "${k}=${v}" \
 %{ endfor ~}
 ${ansible_playbook}; exit_test $?
