@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "icmp_inbound" {
   from_port   = -1
   to_port     = -1
   protocol    = "icmp"
-  cidr_blocks = data.aws_vpc.this.cidr_block
+  cidr_blocks = [data.aws_vpc.this.cidr_block]
 }
 resource "aws_security_group_rule" "ad_tcp_inbound" {
   for_each          = { for k,v in local.ad_tcp : k => v}
