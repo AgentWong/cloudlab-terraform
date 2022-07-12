@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "icmp_inbound" {
   from_port   = -1
   to_port     = -1
   protocol    = "icmp"
-  cidr_blocks = data.aws_vpc.this.cidr_blocks
+  cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "ad_tcp_inbound" {
   for_each          = toset(local.ad_tcp)
@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "ad_tcp_inbound" {
   from_port   = each.value
   to_port     = each.value
   protocol    = "tcp"
-  cidr_blocks = data.aws_vpc.this.cidr_blocks
+  cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "ad_udp_inbound" {
   for_each          = toset(local.ad_tcp)
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "ad_udp_inbound" {
   from_port   = each.value
   to_port     = each.value
   protocol    = "udp"
-  cidr_blocks = data.aws_vpc.this.cidr_blocks
+  cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "ephemeral_tcp_inbound" {
   type              = "ingress"
@@ -46,7 +46,7 @@ resource "aws_security_group_rule" "ephemeral_tcp_inbound" {
   from_port   = 49152
   to_port     = 65535
   protocol    = "tcp"
-  cidr_blocks = data.aws_vpc.this.cidr_blocks
+  cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "ephemeral_udp_inbound" {
   type              = "ingress"
@@ -55,7 +55,7 @@ resource "aws_security_group_rule" "ephemeral_udp_inbound" {
   from_port   = 49152
   to_port     = 65535
   protocol    = "udp"
-  cidr_blocks = data.aws_vpc.this.cidr_blocks
+  cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "allow_all_outbound" {
   type              = "egress"
