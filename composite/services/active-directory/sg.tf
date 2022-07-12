@@ -8,7 +8,7 @@ locals {
 
 resource "aws_security_group" "instance" {
   name   = "active-directory"
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc_id
 }
 resource "aws_security_group_rule" "icmp_inbound" {
   type              = "ingress"

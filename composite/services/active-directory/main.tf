@@ -12,7 +12,7 @@ module "pdc" {
   ami_name                    = "Windows_Server-2019-English-Full-Base*"
   operating_system            = "Windows"
   region                      = var.region
-  subnet_id                   = var.private_subnet_id[0]
+  subnet_id                   = var.private_subnet_id
   vpc_id                      = var.vpc_id
   security_group_ids          = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
 }
