@@ -43,12 +43,12 @@ resource "null_resource" "ansible_pdc" {
   provisioner "remote-exec" {
     inline = templatefile("${path.module}/../../../../run_playbook.tftpl",{
       ansible_password = rsadecrypt(module.pdc.password_data[0],file("~/.ssh/id_rsa"))
-      password = data.aws_secretsmanager_secret_version.radmin_password.secret_string
       vars = {
         amazon_dns = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b",module.pdc.private_ip[0])}.0.2"
         pdc_hostname = module.pdc.private_ip[0]
         domain = var.domain_name #valhalla.local
         netbios = var.netbios #VALHALLA
+        password = data.aws_secretsmanager_secret_version.radmin_password.secret_string
         reverse_lookup_zone = "${strrev(regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b",module.pdc.private_ip[0]))}.in-addr.arpa"
       }
     })
