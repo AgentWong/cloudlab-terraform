@@ -43,7 +43,7 @@ resource "null_resource" "ansible_pdc" {
       ansible_password = rsadecrypt(module.pdc.password_data[0],file("~/.ssh/id_rsa"))
       vars = {
         amazon_dns = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b",module.pdc.private_ip[0])}.0.2"
-        pdc_hostname = module.pdc.private_ip[0]
+        pdc_hostname = module.pdc.private_ips[0]
         domain = var.domain_name #valhalla.local
         netbios = var.netbios #VALHALLA
         password = data.aws_secretsmanager_secret_version.radmin_password.secret_string

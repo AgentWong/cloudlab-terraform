@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "icmp_inbound" {
   cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "ad_tcp_inbound" {
-  for_each          = toset(local.ad_tcp)
+  for_each          = { for k,v in local.ad_tcp : k => v}
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
 
@@ -30,7 +30,7 @@ resource "aws_security_group_rule" "ad_tcp_inbound" {
   cidr_blocks = data.aws_vpc.this.cidr_block
 }
 resource "aws_security_group_rule" "ad_udp_inbound" {
-  for_each          = toset(local.ad_tcp)
+  for_each          = { for k,v in local.ad_udp : k => v}
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
 
