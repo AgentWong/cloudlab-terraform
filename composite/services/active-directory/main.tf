@@ -2,7 +2,7 @@ locals {
   instance_name = "${var.environment}-DC-01"
 }
 module "pdc" {
-  source = "../../base/compute/ec2"
+  source = "../../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
   instance_name               = local.instance_name
