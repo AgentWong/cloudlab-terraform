@@ -10,3 +10,6 @@ output "primary_network_interface_ids" {
 output "private_ips" {
   value = values(aws_instance.this)[*].private_ip
 }
+output "password_data" {
+  value = values(aws_instance.this)[*].password_data
+}

@@ -2,6 +2,15 @@ resource "aws_security_group" "instance" {
   name   = "${var.prefix_name}-ansible-bastion"
   vpc_id = module.vpc.vpc_id
 }
+resource "aws_security_group_rule" "icmp_inbound" {
+  type              = "ingress"
+  security_group_id = aws_security_group.instance.id
+
+  from_port   = -1
+  to_port     = -1
+  protocol    = "icmp"
+  cidr_blocks = var.linux_mgmt_cidr
+}
 resource "aws_security_group_rule" "ssh_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
@@ -34,7 +43,6 @@ resource "aws_security_group_rule" "ssh_mgmt_inbound" {
   protocol    = "tcp"
   source_security_group_id = aws_security_group.instance.id
 }
-
 resource "aws_security_group" "winrm_mgmt" {
   name   = "${var.prefix_name}-winrm-mgmt"
   vpc_id = module.vpc.vpc_id

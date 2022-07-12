@@ -19,7 +19,7 @@ module "ansible-bastion" {
 
   key_name                    = module.kms.key_name
   instance_name               = "ansible-bastion"
-  instance_type               = "t3.micro"
+  instance_type               = "t2.micro"
   instance_count              = 1
   iam_instance_profile        = aws_iam_instance_profile.ansible_inventory_profile.name
   associate_public_ip_address = true
