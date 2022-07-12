@@ -59,6 +59,11 @@ variable "get_password_data" {
   type        = bool
   default     = false
 }
+variable "iam_instance_profile" {
+  description = "The name of the instance profile to attach to the instance"
+  type        = string
+  default     = null
+}
 variable "instance_name" {
   description = "The name of the instance"
   type        = string

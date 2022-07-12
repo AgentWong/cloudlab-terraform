@@ -9,10 +9,14 @@ resource "aws_instance" "this" {
   get_password_data           = var.get_password_data
   vpc_security_group_ids      = var.security_group_ids
   subnet_id                   = var.subnet_id
+  iam_instance_profile        = var.iam_instance_profile
   user_data                   = var.user_data
   associate_public_ip_address = var.associate_public_ip_address
   tags = {
-    Name             = "${each.value}"
-    Operating_System = "${var.operating_system}"
+    Name = "${each.value}"
+    OS   = "${var.operating_system}"
+  }
+  provisioner "local-exec" {
+    command = "aws ec2 wait instance-status-ok --instance-ids ${self.id}"
   }
 }

@@ -32,7 +32,7 @@ module "ansible-bastion" {
     #!/bin/bash
     yum update -y
     amazon-linux-extras enable ansible2
-    yum install -y ansible git
+    yum install -y ansible git python3-pip python3 python3-setuptools python-boto3
     git clone https://github.com/AgentWong/cloudlab-ansible.git /home/ec2-user/ansible
     chown -R ec2-user:ec2-user /home/ec2-user/ansible
     EOF
@@ -41,4 +41,25 @@ resource "aws_eip" "ansible-bastion" {
   vpc                       = true
   network_interface         = module.ansible-bastion.primary_network_interface_ids[0]
   associate_with_private_ip = module.ansible-bastion.private_ips[0]
+}
+
+resource "null_resource" "copy_private_key" {
+  triggers = {
+    ansible_bastion_id = module.ansible-bastion.instance_ids[0]
+  }
+
+  connection {
+    type = "ssh"
+    user = "ec2-user"
+    private_key = file("~/.ssh/id_rsa")
+    host = aws_eip.ansible-bastion.public_dns
+  }
+
+  provisioner "file" {
+    source = file("~/.ssh/id_rsa")
+    destination = "/home/ec2-user/.ssh/id_rsa"
+  }
+  depends_on = [
+    module.ansible-bastion
+  ]
 }
