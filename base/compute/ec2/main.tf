@@ -17,6 +17,6 @@ resource "aws_instance" "this" {
     OS   = "${var.operating_system}"
   }
   provisioner "local-exec" {
-    command = "aws ec2 wait instance-status-ok --instance-ids ${self.id}"
+    command = "aws ec2 wait instance-status-ok --instance-ids ${self.id} --region ${var.region}"
   }
 }

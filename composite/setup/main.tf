@@ -25,6 +25,7 @@ module "ansible-bastion" {
   ami_owner                   = "amazon"
   ami_name                    = "amzn2-ami-hvm*x86_64*gp2"
   operating_system            = "Linux"
+  region                      = var.region
   subnet_id                   = module.vpc.public_subnets[0]
   vpc_id                      = module.vpc.vpc_id
   security_group_ids          = [aws_security_group.instance.id]
@@ -49,14 +50,14 @@ resource "null_resource" "copy_private_key" {
   }
 
   connection {
-    type = "ssh"
-    user = "ec2-user"
+    type        = "ssh"
+    user        = "ec2-user"
     private_key = file("~/.ssh/id_rsa")
-    host = aws_eip.ansible-bastion.public_dns
+    host        = aws_eip.ansible-bastion.public_dns
   }
 
   provisioner "file" {
-    source = file("~/.ssh/id_rsa")
+    source      = file("~/.ssh/id_rsa")
     destination = "/home/ec2-user/.ssh/id_rsa"
   }
   depends_on = [

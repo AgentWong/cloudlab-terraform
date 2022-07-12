@@ -43,6 +43,10 @@ variable "security_group_ids" {
   description = "The security group id to associate with the instances"
   type        = list(string)
 }
+variable "region" {
+  description = "The region, used for wait instance"
+  type        = string
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
