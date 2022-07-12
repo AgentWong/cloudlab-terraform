@@ -9,8 +9,20 @@ variable "netbios" {
 }
 
 # EC2
+variable "environment" {
+  description = "The current environment"
+  type        = string
+}
 variable "ansible_winrm_sg_id" {
   description = "The SG id to allow WinRM access"
+  type        = string
+}
+variable "key_name" {
+  description = "The keyname"
+  type        = string
+}
+variable "private_subnet_id" {
+  description = "A private subnet ID to deploy the instance in"
   type        = string
 }
 variable "region" {

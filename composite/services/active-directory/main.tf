@@ -4,18 +4,16 @@ locals {
 module "pdc" {
   source = "../../../base/compute/ec2"
 
-  key_name                    = module.kms.key_name
+  key_name                    = var.key_name
   instance_name               = local.instance_name
   instance_type               = "t3.medium"
   instance_count              = 1
-  iam_instance_profile        = aws_iam_instance_profile.ansible_inventory_profile.name
-  associate_public_ip_address = true
   ami_owner                   = "amazon"
   ami_name                    = "Windows_Server-2019-English-Full-Base*"
   operating_system            = "Windows"
   region                      = var.region
-  subnet_id                   = module.vpc.private_subnets[0]
-  vpc_id                      = module.vpc.vpc_id
+  subnet_id                   = var.private_subnet_id[0]
+  vpc_id                      = var.vpc_id
   security_group_ids          = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
 }
 module "secrets" {
