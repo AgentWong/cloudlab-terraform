@@ -57,7 +57,7 @@ resource "null_resource" "copy_private_key" {
   }
 
   provisioner "file" {
-    source      = file("~/.ssh/id_rsa")
+    source      = "~/.ssh/id_rsa"
     destination = "/home/ec2-user/.ssh/id_rsa"
   }
   depends_on = [
