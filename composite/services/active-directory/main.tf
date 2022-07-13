@@ -43,13 +43,13 @@ resource "null_resource" "ansible_pdc" {
     inline = [<<EOF
     ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
       ansible_playbook = "windows-setup-pdc.yml"
-      ansible_password = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
+      ansible_password = "${nonsensitive(rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa")))}"
       vars = {
         amazon_dns          = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])}.0.2"
         pdc_hostname        = module.pdc.private_ips[0]
         domain              = var.domain_name #valhalla.local
         netbios             = var.netbios     #VALHALLA
-        password            = data.aws_secretsmanager_secret_version.radmin_password.secret_string
+        password            = "${nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)}"
         reverse_lookup_zone = "${strrev(regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", module.pdc.private_ips[0]))}.in-addr.arpa"
       }
 })}
