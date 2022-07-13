@@ -20,7 +20,7 @@ module "pdc" {
   security_group_ids = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
   user_data          = <<EOF
 <powershell>
-netsh advfirewall set rule group="network discovery" new enable=yes
+netsh advfirewall firewall set rule group="network discovery" new enable=yes
 winrm quickconfig
 </powershell>
 EOF
