@@ -29,7 +29,7 @@ module "ansible-bastion" {
   region                      = var.region
   subnet_id                   = module.vpc.public_subnets[0]
   vpc_id                      = module.vpc.vpc_id
-  security_group_ids          = [aws_security_group.instance.id]
+  security_group_ids          = [aws_security_group.ansible_bastion.id]
   user_data                   = <<EOF
 #!/bin/bash
 yum update -y
@@ -66,4 +66,27 @@ resource "null_resource" "copy_private_key" {
   depends_on = [
     module.ansible-bastion
   ]
+}
+
+
+module "windows-bastion" {
+  source = "../../base/compute/ec2"
+
+  key_name                    = module.kms.key_name
+  instance_name               = "windows-bastion"
+  instance_type               = "t3.medium"
+  instance_count              = 1
+  associate_public_ip_address = true
+  ami_owner                   = "amazon"
+  ami_name                    = "Windows_Server-2019-English-Full-Base*"
+  operating_system            = "Windows"
+  region                      = var.region
+  subnet_id                   = module.vpc.public_subnets[0]
+  vpc_id                      = module.vpc.vpc_id
+  security_group_ids          = [aws_security_group.windows_bastion.id]
+}
+resource "aws_eip" "windows-bastion" {
+  vpc                       = true
+  network_interface         = module.windows-bastion.primary_network_interface_ids[0]
+  associate_with_private_ip = module.windows-bastion.private_ips[0]
 }
