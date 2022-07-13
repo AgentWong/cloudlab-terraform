@@ -1,6 +1,6 @@
 locals {
   instance_name = "${var.environment}-PDC"
-  ansible_password = nonsensitive(rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa")))
+  ansible_password = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
   password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
 }
 module "pdc" {
