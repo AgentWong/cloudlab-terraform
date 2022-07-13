@@ -33,9 +33,9 @@ module "ansible-bastion" {
   user_data                   = <<EOF
 #!/bin/bash
 yum update -y
-yum install -y ansible git python3-pip python3-setuptools python3-boto3 gcc python3-devel krb5-devel krb5-libs krb5-workstation
+yum install -y ansible git python3-pip python3-setuptools gcc python3-devel krb5-devel krb5-workstation
 pip3 install wheel
-pip3 install pywinrm[kerberos]
+pip3 install pywinrm[kerberos] boto3
 git clone https://github.com/AgentWong/cloudlab-ansible.git /home/ec2-user/ansible
 chown -R ec2-user:ec2-user /home/ec2-user/ansible
 EOF
