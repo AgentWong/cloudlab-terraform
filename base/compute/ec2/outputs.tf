@@ -1,6 +1,9 @@
 output "instance_ids" {
   value = values(aws_instance.this)[*].id
 }
+output "instance_names" {
+  value = lookup(values(aws_instance.this)[*].tags, "Name")
+}
 output "public_ips" {
   value = values(aws_instance.this)[*].public_ip
 }

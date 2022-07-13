@@ -53,6 +53,7 @@ resource "null_resource" "ansible_pdc" {
       ansible_playbook = "windows-setup-pdc.yml"
       ansible_password = local.ansible_password
       vars = {
+        new_hostname        = module.pdc.instance_names[0]
         ansible_user        = "Administrator"
         amazon_dns          = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])}.0.2"
         pdc_hostname        = module.pdc.private_ips[0]
