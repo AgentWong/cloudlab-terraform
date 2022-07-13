@@ -23,8 +23,8 @@ module "ansible-bastion" {
   instance_count              = 1
   iam_instance_profile        = aws_iam_instance_profile.ansible_inventory_profile.name
   associate_public_ip_address = true
-  ami_owner                   = "amazon"
-  ami_name                    = "amzn2-ami-hvm*x86_64*gp2"
+  ami_owner                   = "309956199498"
+  ami_name                    = "RHEL-8*HVM*x86_64*GP2*"
   operating_system            = "Linux"
   region                      = var.region
   subnet_id                   = module.vpc.public_subnets[0]
@@ -33,10 +33,9 @@ module "ansible-bastion" {
   user_data                   = <<EOF
     #!/bin/bash
     yum update -y
-    yum install -y ansible git python-pip  python-setuptools python-boto3 gcc python-devel krb5-devel krb5-libs krb5-workstation python2-winrm.noarch
-    amazon-linux-extras enable ansible2
-    pip install wheel
-    pip install pywinrm[kerberos]
+    yum install -y ansible git python3-pip python3-setuptools python3-boto3 gcc python3-devel krb5-devel krb5-libs krb5-workstation
+    pip3 install wheel
+    pip3 install pywinrm[kerberos]
     git clone https://github.com/AgentWong/cloudlab-ansible.git /home/ec2-user/ansible
     chown -R ec2-user:ec2-user /home/ec2-user/ansible
     EOF
