@@ -3,7 +3,7 @@ resource "aws_security_group" "ansible_bastion" {
   name   = "${var.prefix_name}-ansible-bastion"
   vpc_id = module.vpc.vpc_id
 }
-resource "aws_security_group_rule" "icmp_inbound" {
+resource "aws_security_group_rule" "ansible_bastion_icmp_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.ansible_bastion.id
 
@@ -21,7 +21,7 @@ resource "aws_security_group_rule" "ssh_inbound" {
   protocol    = "tcp"
   cidr_blocks = var.linux_mgmt_cidr
 }
-resource "aws_security_group_rule" "allow_all_outbound" {
+resource "aws_security_group_rule" "ansible_bastion_allow_all_outbound" {
   type              = "egress"
   security_group_id = aws_security_group.ansible_bastion.id
 
@@ -63,7 +63,7 @@ resource "aws_security_group" "windows_bastion" {
   name   = "${var.prefix_name}-windows-bastion"
   vpc_id = module.vpc.vpc_id
 }
-resource "aws_security_group_rule" "icmp_inbound" {
+resource "aws_security_group_rule" "windows_bastion_icmp_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.windows_bastion.id
 
@@ -81,7 +81,7 @@ resource "aws_security_group_rule" "rdp_inbound" {
   protocol    = "tcp"
   cidr_blocks = var.linux_mgmt_cidr
 }
-resource "aws_security_group_rule" "allow_all_outbound" {
+resource "aws_security_group_rule" "windows_bastion_allow_all_outbound" {
   type              = "egress"
   security_group_id = aws_security_group.windows_bastion.id
 
