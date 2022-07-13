@@ -17,4 +17,5 @@ ansible-playbook \
 %{ for k,v in vars ~}
 -e "${k}=${v}" \
 %{ endfor ~}
+-e ansible_password='{{ lookup("env", "ANSIBLE_PASSWORD") }}' \
 ${ansible_playbook}; exit_test $?
