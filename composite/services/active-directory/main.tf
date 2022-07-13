@@ -18,6 +18,7 @@ module "pdc" {
   subnet_id          = var.private_subnet_id
   vpc_id             = var.vpc_id
   security_group_ids = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
+  user_data          = "winrm quickconfig"
 }
 module "secrets" {
   source = "../../../base/secrets-manager"
