@@ -1,7 +1,7 @@
 locals {
-  instance_name = "${var.environment}-PDC"
+  instance_name    = "${var.environment}-PDC"
   ansible_password = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
-  password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
+  password         = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
 }
 module "pdc" {
   source = "../../../base/compute/ec2"
@@ -47,6 +47,7 @@ resource "null_resource" "ansible_pdc" {
       ansible_playbook = "windows-setup-pdc.yml"
       ansible_password = local.ansible_password
       vars = {
+        ansible_user        = "Administrator"
         amazon_dns          = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])}.0.2"
         pdc_hostname        = module.pdc.private_ips[0]
         domain              = var.domain_name #valhalla.local
