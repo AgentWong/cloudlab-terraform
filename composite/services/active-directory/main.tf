@@ -1,7 +1,9 @@
 locals {
-  instance_name    = "${var.environment}-PDC"
-  ansible_password = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
-  password         = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
+  instance_name       = "${var.environment}-PDC"
+  ansible_password    = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
+  password            = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
+  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", module.pdc.private_ips[0])
+  reverse_lookup_zone = join(".", reverse(split(".", local.pdc_subnet_cidr)))
 }
 module "pdc" {
   source = "../../../base/compute/ec2"
@@ -16,12 +18,14 @@ module "pdc" {
   operating_system   = "Windows"
   region             = var.region
   subnet_id          = var.private_subnet_id
+  private_ip         = "${local.pdc_subnet_cidr}.5"
   vpc_id             = var.vpc_id
   security_group_ids = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
   user_data          = <<EOF
 <powershell>
+Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
 Get-NetFirewallRule -DisplayGroup 'Network Discovery' | Set-NetFirewallRule -Profile 'Private, Domain' -Enabled true
-winrm quickconfig
+winrm quickconfig -quiet
 </powershell>
 EOF
 }
@@ -60,7 +64,7 @@ resource "null_resource" "ansible_pdc" {
         domain              = var.domain_name #valhalla.local
         netbios             = var.netbios     #VALHALLA
         password            = local.password
-        reverse_lookup_zone = "${strrev(regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", module.pdc.private_ips[0]))}.in-addr.arpa"
+        reverse_lookup_zone = "${local.reverse_lookup_zone}.in-addr.arpa"
       }
 })}
     EOF

@@ -39,6 +39,7 @@ pip3 install --upgrade requests
 pip3 install pywinrm[kerberos] boto3
 git clone https://github.com/AgentWong/cloudlab-ansible.git /home/ec2-user/ansible
 ansible-galaxy collection install ansible.windows -p /usr/share/ansible/collections
+ansible-galaxy collection install community.windows -p /usr/share/ansible/collections
 chown -R ec2-user:ec2-user /home/ec2-user/ansible
 EOF
 }

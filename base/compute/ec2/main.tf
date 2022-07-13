@@ -11,6 +11,7 @@ resource "aws_instance" "this" {
   subnet_id                   = var.subnet_id
   iam_instance_profile        = var.iam_instance_profile
   user_data                   = var.user_data
+  private_ip                  = var.private_ip
   associate_public_ip_address = var.associate_public_ip_address
   tags = {
     Name = "${each.value}"

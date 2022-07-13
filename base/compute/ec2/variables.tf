@@ -73,6 +73,11 @@ variable "instance_name" {
   type        = string
   default     = null
 }
+variable "private_ip" {
+  description = "The private IP for the instance"
+  type        = string
+  default     = null
+}
 variable "user_data" {
   description = "The User Data script to run in each Instance at boot"
   type        = string
