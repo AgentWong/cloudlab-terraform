@@ -52,7 +52,7 @@ resource "aws_security_group_rule" "winrm_mgmt_inbound" {
   security_group_id = aws_security_group.winrm_mgmt.id
 
   from_port   = 5985
-  to_port     = 5985
+  to_port     = 5986
   protocol    = "tcp"
   source_security_group_id = aws_security_group.instance.id
 }
