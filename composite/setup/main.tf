@@ -27,7 +27,7 @@ module "ansible-bastion" {
   ami_name                    = "RHEL-8*HVM*x86_64*GP2*"
   operating_system            = "Linux"
   region                      = var.region
-  subnet_id                   = module.vpc.public_subnets[0]
+  subnet_id                   = module.vpc.public_subnet_ids[0]
   vpc_id                      = module.vpc.vpc_id
   security_group_ids          = [aws_security_group.ansible_bastion.id]
   user_data                   = <<EOF
@@ -83,7 +83,7 @@ module "windows-bastion" {
   ami_name                    = "Windows_Server-2019-English-Full-Base*"
   operating_system            = "Windows"
   region                      = var.region
-  subnet_id                   = module.vpc.public_subnets[0]
+  subnet_id                   = module.vpc.public_subnet_ids[0]
   vpc_id                      = module.vpc.vpc_id
   security_group_ids          = [aws_security_group.windows_bastion.id]
 }
