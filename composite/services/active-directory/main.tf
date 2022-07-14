@@ -2,7 +2,7 @@ locals {
   instance_name       = "${var.environment}-PDC"
   ansible_password    = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
   password            = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
-  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", module.pdc.private_ips[0])
+  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b",var.pdc_subnet_cidr)
   reverse_lookup_zone = join(".", reverse(split(".", local.pdc_subnet_cidr)))
 }
 module "pdc" {
@@ -17,7 +17,7 @@ module "pdc" {
   get_password_data  = true
   operating_system   = "Windows"
   region             = var.region
-  subnet_id          = var.private_subnet_id
+  subnet_id          = var.pdc_subnet_id
   private_ip         = "${local.pdc_subnet_cidr}.5"
   vpc_id             = var.vpc_id
   security_group_ids = [aws_security_group.instance.id, var.ansible_winrm_sg_id]

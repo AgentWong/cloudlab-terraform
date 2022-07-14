@@ -25,7 +25,11 @@ variable "key_name" {
   description = "The keyname"
   type        = string
 }
-variable "private_subnet_id" {
+variable "pdc_subnet_cidr" {
+  description = "A private subnet ID to deploy the instance in"
+  type        = string
+}
+variable "pdc_subnet_id" {
   description = "A private subnet ID to deploy the instance in"
   type        = string
 }
