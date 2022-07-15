@@ -61,7 +61,7 @@ resource "null_resource" "ansible_pdc" {
         new_hostname        = module.pdc.instance_names[0]
         ansible_user        = "Administrator"
         amazon_dns          = "${local.vpc_cidr}.0.2"
-        pdc_hostname        = module.pdc.instance_names[0]
+        pdc_hostname        = "${local.pdc_subnet_cidr}.5"
         domain              = var.domain_name #valhalla.local
         netbios             = var.netbios     #VALHALLA
         password            = local.password
