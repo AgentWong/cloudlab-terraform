@@ -9,6 +9,10 @@ variable "public_key" {
 }
 
 # VPC
+variable "domain_name" {
+  description = "The domain name"
+  type        = string
+}
 variable "prefix_name" {
   description = "Name of the environment."
   type        = string
