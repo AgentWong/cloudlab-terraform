@@ -3,6 +3,7 @@ locals {
   ansible_password    = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
   password            = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
   pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.pdc_subnet_cidr)
+  vpc_cidr            = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])
   reverse_lookup_zone = join(".", reverse(split(".", local.pdc_subnet_cidr)))
 }
 module "pdc" {
@@ -59,7 +60,7 @@ resource "null_resource" "ansible_pdc" {
       vars = {
         new_hostname        = module.pdc.instance_names[0]
         ansible_user        = "Administrator"
-        amazon_dns          = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])}.0.2"
+        amazon_dns          = "${local.vpc_cidr}.0.2"
         pdc_hostname        = module.pdc.instance_names[0]
         domain              = var.domain_name #valhalla.local
         netbios             = var.netbios     #VALHALLA
@@ -78,7 +79,7 @@ depends_on = [
 
 /* resource "aws_vpc_dhcp_options" "this" {
   domain_name          = var.domain_name
-  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "10.0.0.2"]
+  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "${local.vpc_cidr}.0.2"]
   ntp_servers          = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "169.254.169.123"]
   netbios_name_servers = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5"]
   netbios_node_type    = 2

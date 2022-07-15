@@ -1,8 +1,3 @@
-locals {
-  pdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[0])
-  rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[1])
-  vpc_cidr        = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", var.vpc_cidr)
-}
 module "kms" {
   source = "../../base/compute/ec2-keypair"
 
@@ -69,6 +64,9 @@ resource "null_resource" "copy_private_key" {
     source      = "~/.ssh/id_rsa"
     destination = "/home/ec2-user/.ssh/id_rsa"
   }
+  provisioner "remote-exec" {
+    inline = ["cloud-init status --wait"]
+  }
   depends_on = [
     module.ansible-bastion
   ]
@@ -95,14 +93,4 @@ resource "aws_eip" "windows-bastion" {
   associate_with_private_ip = module.windows-bastion.private_ips[0]
 }
 
-resource "aws_vpc_dhcp_options" "this" {
-  domain_name          = var.domain_name
-  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "${local.vpc_cidr}.0.2"]
-  ntp_servers          = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "169.254.169.123"]
-  netbios_name_servers = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5"]
-  netbios_node_type    = 2
-}
-resource "aws_vpc_dhcp_options_association" "dns_resolver" {
-  vpc_id          = module.vpc.vpc_id
-  dhcp_options_id = aws_vpc_dhcp_options.this.id
-}
+
