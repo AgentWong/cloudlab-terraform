@@ -1,6 +1,7 @@
 locals {
-  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[0])
-  vpc_cidr     = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", var.vpc_cidr)
+  pdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[0])
+  rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[1])
+  vpc_cidr        = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", var.vpc_cidr)
 }
 module "kms" {
   source = "../../base/compute/ec2-keypair"
