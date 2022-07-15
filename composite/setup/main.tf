@@ -1,7 +1,3 @@
-locals {
-  pdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[0])
-  rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnets[1])
-}
 module "kms" {
   source = "../../base/compute/ec2-keypair"
 
@@ -93,14 +89,4 @@ resource "aws_eip" "windows-bastion" {
   network_interface         = module.windows-bastion.primary_network_interface_ids[0]
   associate_with_private_ip = module.windows-bastion.private_ips[0]
 }
-resource "aws_vpc_dhcp_options" "this" {
-  domain_name          = var.domain_name
-  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "10.0.0.2"]
-  ntp_servers          = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "169.254.169.123"]
-  netbios_name_servers = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5"]
-  netbios_node_type    = 2
-}
-resource "aws_vpc_dhcp_options_association" "dns_resolver" {
-  vpc_id          = module.vpc.vpc_id
-  dhcp_options_id = aws_vpc_dhcp_options.this.id
-}
+

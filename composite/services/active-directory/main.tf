@@ -2,7 +2,7 @@ locals {
   instance_name       = "${var.environment}-PDC"
   ansible_password    = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
   password            = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
-  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b",var.pdc_subnet_cidr)
+  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.pdc_subnet_cidr)
   reverse_lookup_zone = join(".", reverse(split(".", local.pdc_subnet_cidr)))
 }
 module "pdc" {
@@ -74,3 +74,16 @@ depends_on = [
   module.pdc
 ]
 }
+
+
+/* resource "aws_vpc_dhcp_options" "this" {
+  domain_name          = var.domain_name
+  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "10.0.0.2"]
+  ntp_servers          = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "169.254.169.123"]
+  netbios_name_servers = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5"]
+  netbios_node_type    = 2
+}
+resource "aws_vpc_dhcp_options_association" "dns_resolver" {
+  vpc_id          = module.vpc.vpc_id
+  dhcp_options_id = aws_vpc_dhcp_options.this.id
+} */
