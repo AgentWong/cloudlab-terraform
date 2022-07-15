@@ -60,7 +60,7 @@ resource "null_resource" "ansible_pdc" {
         new_hostname        = module.pdc.instance_names[0]
         ansible_user        = "Administrator"
         amazon_dns          = "${regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])}.0.2"
-        pdc_hostname        = module.pdc.private_ips[0]
+        pdc_hostname        = module.pdc.instance_names[0]
         domain              = var.domain_name #valhalla.local
         netbios             = var.netbios     #VALHALLA
         password            = local.password
