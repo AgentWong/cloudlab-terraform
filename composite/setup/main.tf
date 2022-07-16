@@ -71,7 +71,7 @@ resource "null_resource" "copy_private_key" {
     module.ansible-bastion
   ]
 }
-module "windows-bastion" {
+/* module "windows-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
@@ -94,3 +94,4 @@ resource "aws_eip" "windows-bastion" {
 }
 
 
+ */

@@ -33,6 +33,14 @@ variable "pdc_subnet_id" {
   description = "A private subnet ID to deploy the instance in"
   type        = string
 }
+variable "rdc_subnet_cidr" {
+  description = "A private subnet ID to deploy the instance in"
+  type        = string
+}
+variable "rdc_subnet_id" {
+  description = "A private subnet ID to deploy the instance in"
+  type        = string
+}
 variable "region" {
   description = "The region this is running in"
   type        = string
