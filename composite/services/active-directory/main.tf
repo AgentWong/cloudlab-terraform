@@ -106,6 +106,9 @@ Get-NetFirewallRule -DisplayGroup 'Network Discovery' | Set-NetFirewallRule -Pro
 winrm quickconfig -quiet
 </powershell>
 EOF
+  depends_on = [
+    null_resource.ansible_pdc
+  ]
 }
 resource "null_resource" "ansible_rdc_domain_join" {
   triggers = {
