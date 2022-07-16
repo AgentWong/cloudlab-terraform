@@ -125,13 +125,13 @@ resource "null_resource" "ansible_rdc" {
       ansible_playbook = "windows-setup-rdc.yml"
       ansible_password = local.rdc_password
       vars = {
-        new_hostname      = module.rdc.instance_names[0]
-        ansible_user      = "Administrator"
-        dns_server        = "${local.pdc_subnet_cidr}.5" # PDC
-        rdc_hostname      = "${local.rdc_subnet_cidr}.5"
-        domain            = var.domain_name
-        domain_admin_user = "radmin"
-        password          = local.default_admin_password
+        new_hostname = module.rdc.instance_names[0]
+        ansible_user = "Administrator"
+        dns_server   = "${local.pdc_subnet_cidr}.5" # PDC
+        rdc_hostname = "${local.rdc_subnet_cidr}.5"
+        domain       = var.domain_name
+        domain_admin = "radmin"
+        password     = local.default_admin_password
       }
 })}
     EOF
