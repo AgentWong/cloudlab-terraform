@@ -107,6 +107,40 @@ winrm quickconfig -quiet
 </powershell>
 EOF
 }
+resource "null_resource" "ansible_rdc_domain_join" {
+  triggers = {
+    ansible_bastion_id = module.rdc.instance_ids[0]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("~/.ssh/id_rsa")
+    host        = var.ansible_bastion_public_dns
+  }
+
+  provisioner "remote-exec" {
+    inline = [<<EOF
+    ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
+      ansible_playbook = "windows-join-domain.yml"
+      ansible_password = local.rdc_password
+      vars = {
+        new_hostname = module.rdc.instance_names[0]
+        ansible_user = "Administrator"
+        dns_server   = "${local.pdc_subnet_cidr}.5" # PDC
+        hostname     = "${local.rdc_subnet_cidr}.5"
+        domain       = var.domain_name
+        domain_admin = "radmin@${var.domain_name}"
+        password     = local.default_admin_password
+      }
+})}
+    EOF
+]
+}
+depends_on = [
+  module.rdc
+]
+}
 resource "null_resource" "ansible_rdc" {
   triggers = {
     ansible_bastion_id = module.rdc.instance_ids[0]
@@ -123,11 +157,9 @@ resource "null_resource" "ansible_rdc" {
     inline = [<<EOF
     ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
       ansible_playbook = "windows-setup-rdc.yml"
-      ansible_password = local.rdc_password
+      ansible_password = local.default_admin_password
       vars = {
-        new_hostname = module.rdc.instance_names[0]
-        ansible_user = "Administrator"
-        dns_server   = "${local.pdc_subnet_cidr}.5" # PDC
+        ansible_user = "radmin@${var.domain_name}"
         rdc_hostname = "${local.rdc_subnet_cidr}.5"
         domain       = var.domain_name
         domain_admin = "radmin@${var.domain_name}"
@@ -138,7 +170,7 @@ resource "null_resource" "ansible_rdc" {
 ]
 }
 depends_on = [
-  module.rdc
+  null_resource.ansible_rdc_domain_join
 ]
 }
 
