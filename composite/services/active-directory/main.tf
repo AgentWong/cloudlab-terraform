@@ -39,7 +39,7 @@ module "pdc" {
   subnet_id          = var.pdc_subnet_id
   private_ip         = "${local.pdc_subnet_cidr}.5"
   vpc_id             = var.vpc_id
-  security_group_ids = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
+  security_group_ids = [aws_security_group.ad.id, var.ansible_winrm_sg_id]
   user_data          = <<EOF
 <powershell>
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
@@ -98,7 +98,7 @@ module "rdc" {
   subnet_id          = var.rdc_subnet_id
   private_ip         = "${local.rdc_subnet_cidr}.5"
   vpc_id             = var.vpc_id
-  security_group_ids = [aws_security_group.instance.id, var.ansible_winrm_sg_id]
+  security_group_ids = [aws_security_group.ad.id, var.ansible_winrm_sg_id]
   user_data          = <<EOF
 <powershell>
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"

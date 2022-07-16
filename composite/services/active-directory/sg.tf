@@ -6,13 +6,13 @@ locals {
   ad_udp = [53, 123, 138, 389, 445, 464]
 }
 
-resource "aws_security_group" "instance" {
+resource "aws_security_group" "ad" {
   name   = "active-directory"
   vpc_id = var.vpc_id
 }
 resource "aws_security_group_rule" "icmp_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.ad.id
 
   from_port   = -1
   to_port     = -1
@@ -22,7 +22,7 @@ resource "aws_security_group_rule" "icmp_inbound" {
 resource "aws_security_group_rule" "ad_tcp_inbound" {
   for_each          = { for k,v in local.ad_tcp : v => v}
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.ad.id
 
   from_port   = each.value
   to_port     = each.value
@@ -32,7 +32,7 @@ resource "aws_security_group_rule" "ad_tcp_inbound" {
 resource "aws_security_group_rule" "ad_udp_inbound" {
   for_each          = { for k,v in local.ad_udp : v => v}
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.ad.id
 
   from_port   = each.value
   to_port     = each.value
@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "ad_udp_inbound" {
 }
 resource "aws_security_group_rule" "ephemeral_tcp_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.ad.id
 
   from_port   = 49152
   to_port     = 65535
@@ -50,7 +50,7 @@ resource "aws_security_group_rule" "ephemeral_tcp_inbound" {
 }
 resource "aws_security_group_rule" "ephemeral_udp_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.ad.id
 
   from_port   = 49152
   to_port     = 65535
@@ -59,7 +59,7 @@ resource "aws_security_group_rule" "ephemeral_udp_inbound" {
 }
 resource "aws_security_group_rule" "allow_all_outbound" {
   type              = "egress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.ad.id
 
   from_port   = 0
   to_port     = 0

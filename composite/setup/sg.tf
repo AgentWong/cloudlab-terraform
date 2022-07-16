@@ -59,7 +59,7 @@ resource "aws_security_group_rule" "winrm_mgmt_inbound" {
 }
 
 # windows Bastion
-/* resource "aws_security_group" "windows_bastion" {
+resource "aws_security_group" "windows_bastion" {
   name   = "${var.prefix_name}-windows-bastion"
   vpc_id = module.vpc.vpc_id
 }
@@ -89,4 +89,4 @@ resource "aws_security_group_rule" "windows_bastion_allow_all_outbound" {
   to_port     = 0
   protocol    = "-1"
   cidr_blocks = ["0.0.0.0/0"]
-} */
+}

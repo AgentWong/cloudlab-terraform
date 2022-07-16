@@ -65,13 +65,13 @@ resource "null_resource" "copy_private_key" {
     destination = "/home/ec2-user/.ssh/id_rsa"
   }
   provisioner "remote-exec" {
-    inline = ["cloud-init status --wait"]
+    inline = ["chmod 0600 /home/ec2-user/.ssh/id_rsa","cloud-init status --wait"]
   }
   depends_on = [
     module.ansible-bastion
   ]
 }
-/* module "windows-bastion" {
+module "windows-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
@@ -92,6 +92,3 @@ resource "aws_eip" "windows-bastion" {
   network_interface         = module.windows-bastion.primary_network_interface_ids[0]
   associate_with_private_ip = module.windows-bastion.private_ips[0]
 }
-
-
- */
