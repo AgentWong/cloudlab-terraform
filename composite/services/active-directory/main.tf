@@ -122,7 +122,7 @@ resource "null_resource" "ansible_rdc" {
   provisioner "remote-exec" {
     inline = [<<EOF
     ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
-      ansible_playbook = "windows-setup-pdc.yml"
+      ansible_playbook = "windows-setup-rdc.yml"
       ansible_password = local.rdc_password
       vars = {
         new_hostname      = module.rdc.instance_names[0]
