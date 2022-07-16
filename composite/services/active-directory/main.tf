@@ -130,7 +130,7 @@ resource "null_resource" "ansible_rdc" {
         dns_server   = "${local.pdc_subnet_cidr}.5" # PDC
         rdc_hostname = "${local.rdc_subnet_cidr}.5"
         domain       = var.domain_name
-        domain_admin = "radmin"
+        domain_admin = "radmin@${var.domain_name}"
         password     = local.default_admin_password
       }
 })}
