@@ -3,7 +3,7 @@ data "aws_vpc" "this" {
 }
 locals {
   ad_tcp = [53, 88, 135, 389, 445, 464, 636, 3268, 3269, 3389, 9389]
-  ad_udp = [53, 123, 138, 389, 445, 464]
+  ad_udp = [53, 88, 123, 138, 389, 445, 464]
 }
 
 resource "aws_security_group" "ad" {
