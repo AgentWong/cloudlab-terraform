@@ -8,7 +8,8 @@ locals {
   pdc_password         = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
   pdc_subnet_cidr      = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
   all_subnets_3_octet = concat([for cidr in var.private_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)],[for cidr in var.public_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)])
-  reverse_lookup_zones = [ for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
+  list_reverse_lookup_zones = [ for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
+  reverse_lookup_zones = join(",", local.list_reverse_lookup_zones)
   # join(".", reverse(split(".", local.pdc_subnet_cidr)))
 
   # RDC
