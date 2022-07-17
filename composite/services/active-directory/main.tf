@@ -197,9 +197,9 @@ resource "null_resource" "reboot_rdc" {
 
   provisioner "local-exec" {
     command = <<EOT
-    aws ec2 reboot-instances --instance-ids ${self.id} --region ${var.region}
+    aws ec2 reboot-instances --instance-ids ${module.rdc.instance_ids[0]} --region ${var.region}
     sleep 30s
-    aws ec2 wait instance-status-ok --instance-ids ${self.id} --region ${var.region}
+    aws ec2 wait instance-status-ok --instance-ids ${module.rdc.instance_ids[0]} --region ${var.region}
     EOT
   }
   depends_on = [
