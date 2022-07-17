@@ -213,8 +213,9 @@ depends_on = [
 }
 depends_on = [
   null_resource.ansible_rdc
-] */
+] 
 }
+*/
 
 /* resource "aws_vpc_dhcp_options" "this" {
   domain_name          = var.domain_name
