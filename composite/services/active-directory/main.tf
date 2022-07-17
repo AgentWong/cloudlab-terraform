@@ -183,7 +183,30 @@ depends_on = [
   null_resource.ansible_rdc_domain_join
 ]
 }
-/* resource "null_resource" "ansible_rdc_finish" {
+resource "null_resource" "reboot_rdc" {
+  triggers = {
+    ansible_bastion_id = module.rdc.instance_ids[0]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("~/.ssh/id_rsa")
+    host        = var.ansible_bastion_public_dns
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+    aws ec2 reboot-instances --instance-ids ${self.id} --region ${var.region}
+    sleep 30s
+    aws ec2 wait instance-status-ok --instance-ids ${self.id} --region ${var.region}
+    EOT
+  }
+  depends_on = [
+  null_resource.ansible_rdc
+]
+}
+resource "null_resource" "ansible_rdc_finish" {
   triggers = {
     ansible_bastion_id = module.rdc.instance_ids[0]
   }
@@ -199,9 +222,10 @@ depends_on = [
     inline = [<<EOF
     ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
       ansible_playbook = "windows-finish-rdc-setup.yml"
-      ansible_password = local.local_rdc_password
+      ansible_password = local.default_admin_password
       vars = {
-        ansible_user = "Administrator"
+        ansible_user = "radmin@${var.domain_name}"
+        pdc_hostname = "${local.pdc_subnet_cidr}.5"
         rdc_hostname = "${local.rdc_subnet_cidr}.5"
         domain       = var.domain_name
         domain_admin = "radmin@${var.domain_name}"
@@ -212,10 +236,10 @@ depends_on = [
 ]
 }
 depends_on = [
-  null_resource.ansible_rdc
+  null_resource.reboot_rdc
 ] 
 }
-*/
+
 
 /* resource "aws_vpc_dhcp_options" "this" {
   domain_name          = var.domain_name
