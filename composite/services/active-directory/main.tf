@@ -4,15 +4,17 @@ locals {
   default_admin_password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
 
   # PDC
-  pdc_name            = "${var.environment}-PDC"
-  pdc_password        = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
-  pdc_subnet_cidr     = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.pdc_subnet_cidr)
-  reverse_lookup_zone = join(".", reverse(split(".", local.pdc_subnet_cidr)))
+  pdc_name             = "${var.environment}-PDC"
+  pdc_password         = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
+  pdc_subnet_cidr      = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
+  all_subnets_3_octet = concat([for cidr in var.private_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)],[for cidr in var.public_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)])
+  reverse_lookup_zones = [ for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
+  # join(".", reverse(split(".", local.pdc_subnet_cidr)))
 
   # RDC
   rdc_name        = "${var.environment}-RDC"
   rdc_password    = rsadecrypt(module.rdc.password_data[0], file("~/.ssh/id_rsa"))
-  rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.rdc_subnet_cidr)
+  rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[1])
 
 }
 module "default_admin_password" {
@@ -36,7 +38,7 @@ module "pdc" {
   get_password_data  = true
   operating_system   = "Windows"
   region             = var.region
-  subnet_id          = var.pdc_subnet_id
+  subnet_id          = var.private_subnet_ids[0]
   private_ip         = "${local.pdc_subnet_cidr}.5"
   vpc_id             = var.vpc_id
   security_group_ids = [aws_security_group.ad.id, var.ansible_winrm_sg_id]
@@ -73,7 +75,7 @@ resource "null_resource" "ansible_pdc" {
         domain              = var.domain_name
         netbios             = var.netbios
         password            = local.default_admin_password
-        reverse_lookup_zone = "${local.reverse_lookup_zone}.in-addr.arpa"
+        reverse_lookup_zones = "${local.reverse_lookup_zones}"
       }
 })}
     EOF
@@ -95,7 +97,7 @@ module "rdc" {
   get_password_data  = true
   operating_system   = "Windows"
   region             = var.region
-  subnet_id          = var.rdc_subnet_id
+  subnet_id          = var.private_subnet_ids[1]
   private_ip         = "${local.rdc_subnet_cidr}.5"
   vpc_id             = var.vpc_id
   security_group_ids = [aws_security_group.ad.id, var.ansible_winrm_sg_id]

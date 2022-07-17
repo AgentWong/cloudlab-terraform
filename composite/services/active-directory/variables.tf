@@ -25,21 +25,17 @@ variable "key_name" {
   description = "The keyname"
   type        = string
 }
-variable "pdc_subnet_cidr" {
+variable "private_subnet_cidrs" {
   description = "A private subnet ID to deploy the instance in"
-  type        = string
+  type        = list(string)
 }
-variable "pdc_subnet_id" {
+variable "private_subnet_ids" {
   description = "A private subnet ID to deploy the instance in"
-  type        = string
+  type        = list(string)
 }
-variable "rdc_subnet_cidr" {
+variable "public_subnet_cidrs" {
   description = "A private subnet ID to deploy the instance in"
-  type        = string
-}
-variable "rdc_subnet_id" {
-  description = "A private subnet ID to deploy the instance in"
-  type        = string
+  type        = list(string)
 }
 variable "region" {
   description = "The region this is running in"
