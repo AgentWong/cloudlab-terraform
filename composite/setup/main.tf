@@ -65,7 +65,7 @@ resource "null_resource" "copy_private_key" {
     destination = "/home/ec2-user/.ssh/id_rsa"
   }
   provisioner "remote-exec" {
-    inline = ["chmod 0600 /home/ec2-user/.ssh/id_rsa","cloud-init status --wait"]
+    inline = ["chmod 0600 /home/ec2-user/.ssh/id_rsa", "cloud-init status --wait"]
   }
   depends_on = [
     module.ansible-bastion
@@ -91,4 +91,56 @@ resource "aws_eip" "windows-bastion" {
   vpc                       = true
   network_interface         = module.windows-bastion.primary_network_interface_ids[0]
   associate_with_private_ip = module.windows-bastion.private_ips[0]
+}
+
+resource "aws_flow_log" "vpc_flow_log" {
+  iam_role_arn    = aws_iam_role.vpc_flow_log.arn
+  log_destination = aws_cloudwatch_log_group.vpc_flow_log.arn
+  traffic_type    = "ALL"
+  vpc_id          = aws_vpc.vpc_flow_log.id
+}
+resource "aws_cloudwatch_log_group" "vpc_flow_log" {
+  name = "vpc_flow_log"
+}
+resource "aws_iam_role" "vpc_flow_log" {
+  name = "vpc_flow_log"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "vpc-flow-logs.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+resource "aws_iam_role_policy" "vpc_flow_log" {
+  name = "vpc_flow_log"
+  role = aws_iam_role.vpc_flow_log.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
 }
