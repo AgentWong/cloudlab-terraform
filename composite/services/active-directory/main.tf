@@ -48,8 +48,8 @@ module "pdc" {
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
 Get-NetFirewallRule -DisplayGroup 'Network Discovery' | Set-NetFirewallRule -Profile 'Private, Domain' -Enabled true
 winrm quickconfig -quiet
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 0
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
+#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 0
+#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
 </powershell>
 EOF
 }
@@ -109,8 +109,8 @@ module "rdc" {
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
 Get-NetFirewallRule -DisplayGroup 'Network Discovery' | Set-NetFirewallRule -Profile 'Private, Domain' -Enabled true
 winrm quickconfig -quiet
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 0
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
+#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 0
+#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
 </powershell>
 EOF
   depends_on = [
@@ -167,9 +167,9 @@ resource "null_resource" "ansible_rdc" {
     inline = [<<EOF
     ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
       ansible_playbook = "windows-setup-rdc.yml"
-      ansible_password = local.default_admin_password
+      ansible_password = local.rdc_password
       vars = {
-        ansible_user = "radmin@${var.domain_name}"
+        ansible_user = "Administrator"
         rdc_hostname = "${local.rdc_subnet_cidr}.5"
         domain       = var.domain_name
         domain_admin = "radmin@${var.domain_name}"
@@ -182,6 +182,38 @@ resource "null_resource" "ansible_rdc" {
 depends_on = [
   null_resource.ansible_rdc_domain_join
 ]
+}
+/* resource "null_resource" "ansible_rdc_finish" {
+  triggers = {
+    ansible_bastion_id = module.rdc.instance_ids[0]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("~/.ssh/id_rsa")
+    host        = var.ansible_bastion_public_dns
+  }
+
+  provisioner "remote-exec" {
+    inline = [<<EOF
+    ${templatefile("${path.module}/../../../templates/run_playbook.tftpl", {
+      ansible_playbook = "windows-finish-rdc-setup.yml"
+      ansible_password = local.local_rdc_password
+      vars = {
+        ansible_user = "Administrator"
+        rdc_hostname = "${local.rdc_subnet_cidr}.5"
+        domain       = var.domain_name
+        domain_admin = "radmin@${var.domain_name}"
+        password     = local.default_admin_password
+      }
+})}
+    EOF
+]
+}
+depends_on = [
+  null_resource.ansible_rdc
+] */
 }
 
 /* resource "aws_vpc_dhcp_options" "this" {
