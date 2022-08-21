@@ -14,7 +14,7 @@ module "vpc" {
   public_subnets  = var.public_subnets
   private_subnets = var.private_subnets
 }
-module "ansible-bastion" {
+module "linux-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
@@ -30,6 +30,27 @@ module "ansible-bastion" {
   subnet_id                   = module.vpc.public_subnet_ids[0]
   vpc_id                      = module.vpc.vpc_id
   security_group_ids          = [aws_security_group.ansible_bastion.id]
+}
+resource "aws_eip" "linux-bastion" {
+  vpc                       = true
+  network_interface         = module.linux-bastion.primary_network_interface_ids[0]
+  associate_with_private_ip = module.linux-bastion.private_ips[0]
+}
+module "ansible-bastion" {
+  source = "../../base/compute/ec2"
+
+  key_name                    = module.kms.key_name
+  instance_name               = "ansible-bastion"
+  instance_type               = "t2.micro"
+  instance_count              = 1
+  iam_instance_profile        = aws_iam_instance_profile.ansible_inventory_profile.name
+  ami_owner                   = "309956199498"
+  ami_name                    = "RHEL-8*HVM*x86_64*GP2*"
+  operating_system            = "Linux"
+  region                      = var.region
+  subnet_id                   = module.vpc.private_subnet_ids[0]
+  vpc_id                      = module.vpc.vpc_id
+  security_group_ids          = [aws_security_group.ansible_bastion.id]
   user_data                   = <<EOF
 #!/bin/bash
 yum update -y
@@ -42,34 +63,6 @@ ansible-galaxy collection install ansible.windows -p /usr/share/ansible/collecti
 ansible-galaxy collection install community.windows -p /usr/share/ansible/collections
 chown -R ec2-user:ec2-user /home/ec2-user/ansible
 EOF
-}
-resource "aws_eip" "ansible-bastion" {
-  vpc                       = true
-  network_interface         = module.ansible-bastion.primary_network_interface_ids[0]
-  associate_with_private_ip = module.ansible-bastion.private_ips[0]
-}
-resource "null_resource" "copy_private_key" {
-  triggers = {
-    ansible_bastion_id = module.ansible-bastion.instance_ids[0]
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = aws_eip.ansible-bastion.public_dns
-  }
-
-  provisioner "file" {
-    source      = "~/.ssh/id_rsa"
-    destination = "/home/ec2-user/.ssh/id_rsa"
-  }
-  provisioner "remote-exec" {
-    inline = ["chmod 0600 /home/ec2-user/.ssh/id_rsa", "cloud-init status --wait"]
-  }
-  depends_on = [
-    module.ansible-bastion
-  ]
 }
 module "windows-bastion" {
   source = "../../base/compute/ec2"

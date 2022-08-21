@@ -21,9 +21,9 @@ resource "aws_security_group_rule" "ssh_inbound" {
   protocol    = "tcp"
   cidr_blocks = var.linux_mgmt_cidr
 }
-resource "aws_security_group_rule" "ansible_bastion_allow_all_outbound" {
+resource "aws_security_group_rule" "linux_bastion_allow_all_outbound" {
   type              = "egress"
-  security_group_id = aws_security_group.ansible_bastion.id
+  security_group_id = aws_security_group.linux_bastion.id
 
   from_port   = 0
   to_port     = 0

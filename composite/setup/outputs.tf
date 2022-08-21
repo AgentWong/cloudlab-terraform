@@ -2,6 +2,9 @@
 output "key_name" {
     value = module.kms.key_name
 }
+output "ec2_keypair_secret_id" {
+  value = aws_secretsmanager_secret.ec2_private_key.id
+}
 
 # VPC
 output "public_subnet_cidr_blocks" {

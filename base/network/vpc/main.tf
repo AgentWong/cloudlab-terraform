@@ -25,3 +25,14 @@ resource "aws_internet_gateway" "this" {
     Name = "${var.prefix_name}_${var.region}-igw"
   }
 }
+
+#Create NAT Gateway
+resource "aws_eip" "nat_gateway" {
+  for_each = aws_subnet.public_subnets
+  vpc      = true
+}
+resource "aws_nat_gateway" "nat_gateway" {
+  for_each      = aws_subnet.public_subnets
+  allocation_id = aws_eip.nat_gateway[each.key].id
+  subnet_id     = each.value.id
+}
