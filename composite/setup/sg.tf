@@ -1,4 +1,4 @@
-# Ansible Bastion
+# Linux Bastion
 resource "aws_security_group" "linux_bastion" {
   name   = "${var.prefix_name}-linux-bastion"
   vpc_id = module.vpc.vpc_id
@@ -31,6 +31,20 @@ resource "aws_security_group_rule" "linux_bastion_allow_all_outbound" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
+# Ansible Bastion
+resource "aws_security_group" "ansible_bastion" {
+  name   = "${var.prefix_name}-ansible-bastion"
+  vpc_id = module.vpc.vpc_id
+}
+resource "aws_security_group_rule" "linux_bastion_ssh_mgmt_inbound" {
+  type              = "ingress"
+  security_group_id = aws_security_group.ansible_bastion.id
+
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  source_security_group_id = aws_security_group.linux_bastion.id
+}
 resource "aws_security_group" "linux_mgmt" {
   name   = "${var.prefix_name}-linux-mgmt"
   vpc_id = module.vpc.vpc_id
@@ -42,7 +56,7 @@ resource "aws_security_group_rule" "ssh_mgmt_inbound" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  source_security_group_id = aws_security_group.linux_bastion.id
+  source_security_group_id = aws_security_group.ansible_bastion.id
 }
 resource "aws_security_group" "winrm_mgmt" {
   name   = "${var.prefix_name}-winrm-mgmt"
@@ -58,7 +72,7 @@ resource "aws_security_group_rule" "winrm_mgmt_inbound" {
   source_security_group_id = aws_security_group.ansible_bastion.id
 }
 
-# windows Bastion
+# Windows Bastion
 resource "aws_security_group" "windows_bastion" {
   name   = "${var.prefix_name}-windows-bastion"
   vpc_id = module.vpc.vpc_id

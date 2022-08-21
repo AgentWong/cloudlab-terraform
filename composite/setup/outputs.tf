@@ -23,13 +23,13 @@ output "vpc_id" {
     value = module.vpc.vpc_id
 }
 
-# Ansible Bastion
+# Ansible Management
 output "linux_mgmt_sg_id" {
     value = aws_security_group.linux_mgmt.id
 }
 output "winrm_mgmt_sg_id" {
     value = aws_security_group.winrm_mgmt.id
 }
-output "ansible_bastion_public_dns" {
+output "linux_bastion_public_dns" {
     value = aws_eip.linux-bastion.public_dns
 }
