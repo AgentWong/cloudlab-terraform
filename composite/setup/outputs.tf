@@ -31,5 +31,5 @@ output "winrm_mgmt_sg_id" {
     value = aws_security_group.winrm_mgmt.id
 }
 output "ansible_bastion_public_dns" {
-    value = aws_eip.ansible-bastion.public_dns
+    value = aws_eip.linux-bastion.public_dns
 }

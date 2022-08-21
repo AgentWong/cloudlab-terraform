@@ -1,20 +1,20 @@
 # Ansible Bastion
-resource "aws_security_group" "ansible_bastion" {
-  name   = "${var.prefix_name}-ansible-bastion"
+resource "aws_security_group" "linux_bastion" {
+  name   = "${var.prefix_name}-linux-bastion"
   vpc_id = module.vpc.vpc_id
 }
-resource "aws_security_group_rule" "ansible_bastion_icmp_inbound" {
+resource "aws_security_group_rule" "linux_bastion_icmp_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.ansible_bastion.id
+  security_group_id = aws_security_group.linux_bastion.id
 
   from_port   = -1
   to_port     = -1
   protocol    = "icmp"
   cidr_blocks = var.linux_mgmt_cidr
 }
-resource "aws_security_group_rule" "ssh_inbound" {
+resource "aws_security_group_rule" "linux_bastion_ssh_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.ansible_bastion.id
+  security_group_id = aws_security_group.linux_bastion.id
 
   from_port   = 22
   to_port     = 22
@@ -42,7 +42,7 @@ resource "aws_security_group_rule" "ssh_mgmt_inbound" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  source_security_group_id = aws_security_group.ansible_bastion.id
+  source_security_group_id = aws_security_group.linux_bastion.id
 }
 resource "aws_security_group" "winrm_mgmt" {
   name   = "${var.prefix_name}-winrm-mgmt"

@@ -29,7 +29,7 @@ module "linux-bastion" {
   region                      = var.region
   subnet_id                   = module.vpc.public_subnet_ids[0]
   vpc_id                      = module.vpc.vpc_id
-  security_group_ids          = [aws_security_group.ansible_bastion.id]
+  security_group_ids          = [aws_security_group.linux_bastion.id]
 }
 resource "aws_eip" "linux-bastion" {
   vpc                       = true
@@ -50,7 +50,7 @@ module "ansible-bastion" {
   region                      = var.region
   subnet_id                   = module.vpc.private_subnet_ids[0]
   vpc_id                      = module.vpc.vpc_id
-  security_group_ids          = [aws_security_group.ansible_bastion.id]
+  security_group_ids          = [aws_security_group.linux_mgmt.id]
   user_data                   = <<EOF
 #!/bin/bash
 yum update -y
