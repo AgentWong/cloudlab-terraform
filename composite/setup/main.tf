@@ -18,10 +18,9 @@ module "linux-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
-  instance_name               = "ansible-bastion"
+  instance_name               = "linux-bastion"
   instance_type               = "t2.micro"
   instance_count              = 1
-  iam_instance_profile        = aws_iam_instance_profile.ansible_inventory_profile.name
   associate_public_ip_address = true
   ami_owner                   = "309956199498"
   ami_name                    = "RHEL-8*HVM*x86_64*GP2*"
@@ -30,6 +29,29 @@ module "linux-bastion" {
   subnet_id                   = module.vpc.public_subnet_ids[0]
   vpc_id                      = module.vpc.vpc_id
   security_group_ids          = [aws_security_group.linux_bastion.id]
+}
+resource "null_resource" "copy_private_key" {
+  triggers = {
+    linux_bastion_id = module.linux-bastion.instance_ids[0]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("~/.ssh/id_rsa")
+    host        = aws_eip.linux-bastion.public_dns
+  }
+
+  provisioner "file" {
+    source      = "~/.ssh/id_rsa"
+    destination = "/home/ec2-user/.ssh/id_rsa"
+  }
+  provisioner "remote-exec" {
+    inline = ["chmod 0600 /home/ec2-user/.ssh/id_rsa", "cloud-init status --wait"]
+  }
+  depends_on = [
+    module.linux-bastion
+  ]
 }
 resource "aws_eip" "linux-bastion" {
   vpc                       = true
