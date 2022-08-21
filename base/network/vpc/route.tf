@@ -21,16 +21,15 @@ resource "aws_route_table_association" "public_association" {
 
 #NAT
 resource "aws_route_table" "private" {
-  for_each = aws_nat_gateway.nat_gateway
   vpc_id = aws_vpc.this.id
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = each.value.id
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
 }
 
 resource "aws_route_table_association" "private" {
   for_each       = aws_subnet.private_subnets
   subnet_id      = each.value.id
-  route_table_id = aws_route_table.private[element(aws_subnet.public_subnets, index(var.private_subnets, each.key))].id
+  route_table_id = aws_route_table.private.id
 }
