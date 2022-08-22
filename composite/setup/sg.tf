@@ -71,6 +71,15 @@ resource "aws_security_group_rule" "winrm_mgmt_inbound" {
   protocol    = "tcp"
   source_security_group_id = aws_security_group.ansible_bastion.id
 }
+resource "aws_security_group_rule" "ansible_bastion_allow_all_outbound" {
+  type              = "egress"
+  security_group_id = aws_security_group.ansible_bastion.id
+
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+}
 
 # Windows Bastion
 resource "aws_security_group" "windows_bastion" {
