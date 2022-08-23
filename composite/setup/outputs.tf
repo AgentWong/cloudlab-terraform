@@ -34,5 +34,5 @@ output "linux_bastion_public_dns" {
     value = aws_eip.linux-bastion.public_dns
 }
 output "ansible_bastion_private_dns" {
-    value = aws_eip.linux-bastion.private_dns
+    value = aws_eip.ansible-bastion.private_dns
 }
