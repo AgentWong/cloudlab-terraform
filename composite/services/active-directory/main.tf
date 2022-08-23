@@ -66,7 +66,7 @@ resource "null_resource" "ansible_pdc" {
     type             = "ssh"
     user             = "ec2-user"
     private_key      = local.ec2_keypair
-    host             = var.ansible_bastion_private_dns
+    host             = var.ansible_bastion_private_ip
     bastion_user     = "ec2-user"
     bastion_host     = var.linux_bastion_public_dns
     bastion_host_key = local.ec2_keypair
@@ -133,7 +133,7 @@ resource "null_resource" "ansible_rdc_domain_join" {
     type             = "ssh"
     user             = "ec2-user"
     private_key      = local.ec2_keypair
-    host             = var.ansible_bastion_private_dns
+    host             = var.ansible_bastion_private_ip
     bastion_user     = "ec2-user"
     bastion_host     = var.linux_bastion_public_dns
     bastion_host_key = local.ec2_keypair
@@ -170,7 +170,7 @@ resource "null_resource" "ansible_rdc" {
     type             = "ssh"
     user             = "ec2-user"
     private_key      = local.ec2_keypair
-    host             = var.ansible_bastion_private_dns
+    host             = var.ansible_bastion_private_ip
     bastion_user     = "ec2-user"
     bastion_host     = var.linux_bastion_public_dns
     bastion_host_key = local.ec2_keypair
@@ -220,7 +220,7 @@ resource "null_resource" "ansible_rdc_finish" {
     type             = "ssh"
     user             = "ec2-user"
     private_key      = local.ec2_keypair
-    host             = var.ansible_bastion_private_dns
+    host             = var.ansible_bastion_private_ip
     bastion_user     = "ec2-user"
     bastion_host     = var.linux_bastion_public_dns
     bastion_host_key = local.ec2_keypair
