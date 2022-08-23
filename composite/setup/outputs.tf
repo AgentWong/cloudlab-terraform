@@ -33,6 +33,6 @@ output "winrm_mgmt_sg_id" {
 output "linux_bastion_public_dns" {
     value = aws_eip.linux-bastion.public_dns
 }
-output "ansible_bastion_private_dns" {
-    value = aws_eip.ansible-bastion.private_dns
+output "ansible_bastion_private_ip" {
+    value = module.ansible-bastion.private_ips[0]
 }
