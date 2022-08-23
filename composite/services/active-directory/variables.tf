@@ -1,6 +1,10 @@
 # Ansible vars
-variable "ansible_bastion_public_dns" {
-  description = "Public DNS name of the Ansible bastion host"
+variable "ansible_bastion_private_dns" {
+  description = "Private DNS name of the Ansible bastion host"
+  type        = string
+}
+variable "linux_bastion_public_dns" {
+  description = "Public DNS name of the Linux bastion host"
   type        = string
 }
 variable "domain_name" {
@@ -9,6 +13,10 @@ variable "domain_name" {
 }
 variable "netbios" {
   description = "The netbios name"
+  type        = string
+}
+variable "ec2_keypair_secret_id" {
+  description = "EC2 keypair secret id"
   type        = string
 }
 

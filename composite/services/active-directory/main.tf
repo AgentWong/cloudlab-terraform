@@ -2,14 +2,15 @@ locals {
   # Shared
   vpc_cidr               = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])
   default_admin_password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
+  ec2_keypair            = data.aws_secretsmanager_secret_version.ec2_keypair.secret_string
 
   # PDC
-  pdc_name             = "${var.environment}-PDC"
-  pdc_password         = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
-  pdc_subnet_cidr      = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
-  all_subnets_3_octet = concat([for cidr in var.private_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)],[for cidr in var.public_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)])
-  list_reverse_lookup_zones = [ for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
-  reverse_lookup_zones = join(",", local.list_reverse_lookup_zones)
+  pdc_name                  = "${var.environment}-PDC"
+  pdc_password              = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
+  pdc_subnet_cidr           = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
+  all_subnets_3_octet       = concat([for cidr in var.private_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)], [for cidr in var.public_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)])
+  list_reverse_lookup_zones = [for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
+  reverse_lookup_zones      = join(",", local.list_reverse_lookup_zones)
   # join(".", reverse(split(".", local.pdc_subnet_cidr)))
 
   # RDC
@@ -17,6 +18,9 @@ locals {
   rdc_password    = rsadecrypt(module.rdc.password_data[0], file("~/.ssh/id_rsa"))
   rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[1])
 
+}
+data "aws_secretsmanager_secret_version" "ec2_keypair" {
+  secret_id = var.ec2_keypair_secret_id
 }
 module "default_admin_password" {
   source = "../../../base/secrets-manager"
@@ -59,10 +63,13 @@ resource "null_resource" "ansible_pdc" {
   }
 
   connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = var.ansible_bastion_public_dns
+    type             = "ssh"
+    user             = "ec2-user"
+    private_key      = local.ec2_keypair
+    host             = var.ansible_bastion_private_dns
+    bastion_user     = "ec2-user"
+    bastion_host     = var.linux_bastion_public_dns
+    bastion_host_key = local.ec2_keypair
   }
 
   provisioner "remote-exec" {
@@ -71,13 +78,13 @@ resource "null_resource" "ansible_pdc" {
       ansible_playbook = "windows-setup-pdc.yml"
       ansible_password = local.pdc_password
       vars = {
-        new_hostname        = module.pdc.instance_names[0]
-        ansible_user        = "Administrator"
-        dns_server          = "${local.vpc_cidr}.0.2" # Amazon DNS
-        pdc_hostname        = "${local.pdc_subnet_cidr}.5"
-        domain              = var.domain_name
-        netbios             = var.netbios
-        password            = local.default_admin_password
+        new_hostname         = module.pdc.instance_names[0]
+        ansible_user         = "Administrator"
+        dns_server           = "${local.vpc_cidr}.0.2" # Amazon DNS
+        pdc_hostname         = "${local.pdc_subnet_cidr}.5"
+        domain               = var.domain_name
+        netbios              = var.netbios
+        password             = local.default_admin_password
         reverse_lookup_zones = "${local.reverse_lookup_zones}"
       }
 })}
@@ -123,10 +130,13 @@ resource "null_resource" "ansible_rdc_domain_join" {
   }
 
   connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = var.ansible_bastion_public_dns
+    type             = "ssh"
+    user             = "ec2-user"
+    private_key      = local.ec2_keypair
+    host             = var.ansible_bastion_private_dns
+    bastion_user     = "ec2-user"
+    bastion_host     = var.linux_bastion_public_dns
+    bastion_host_key = local.ec2_keypair
   }
 
   provisioner "remote-exec" {
@@ -157,10 +167,13 @@ resource "null_resource" "ansible_rdc" {
   }
 
   connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = var.ansible_bastion_public_dns
+    type             = "ssh"
+    user             = "ec2-user"
+    private_key      = local.ec2_keypair
+    host             = var.ansible_bastion_private_dns
+    bastion_user     = "ec2-user"
+    bastion_host     = var.linux_bastion_public_dns
+    bastion_host_key = local.ec2_keypair
   }
 
   provisioner "remote-exec" {
@@ -188,13 +201,6 @@ resource "null_resource" "reboot_rdc" {
     ansible_bastion_id = module.rdc.instance_ids[0]
   }
 
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = var.ansible_bastion_public_dns
-  }
-
   provisioner "local-exec" {
     command = <<EOT
     aws ec2 reboot-instances --instance-ids ${module.rdc.instance_ids[0]} --region ${var.region}
@@ -202,8 +208,8 @@ resource "null_resource" "reboot_rdc" {
     EOT
   }
   depends_on = [
-  null_resource.ansible_rdc
-]
+    null_resource.ansible_rdc
+  ]
 }
 resource "null_resource" "ansible_rdc_finish" {
   triggers = {
@@ -211,10 +217,13 @@ resource "null_resource" "ansible_rdc_finish" {
   }
 
   connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = var.ansible_bastion_public_dns
+    type             = "ssh"
+    user             = "ec2-user"
+    private_key      = local.ec2_keypair
+    host             = var.ansible_bastion_private_dns
+    bastion_user     = "ec2-user"
+    bastion_host     = var.linux_bastion_public_dns
+    bastion_host_key = local.ec2_keypair
   }
 
   provisioner "remote-exec" {
@@ -236,7 +245,7 @@ resource "null_resource" "ansible_rdc_finish" {
 }
 depends_on = [
   null_resource.reboot_rdc
-] 
+]
 }
 
 

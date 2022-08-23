@@ -75,7 +75,6 @@ module "ansible-bastion" {
   security_group_ids          = [aws_security_group.ansible_bastion.id]
   user_data                   = <<EOF
 #!/bin/bash
-yum update -y
 yum install -y ansible git python3-pip python3-setuptools gcc python3-devel krb5-devel krb5-workstation
 pip3 install wheel
 pip3 install --upgrade requests
