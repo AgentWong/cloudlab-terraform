@@ -1,6 +1,6 @@
 # Ansible vars
-variable "ansible_bastion_private_dns" {
-  description = "Private DNS name of the Ansible bastion host"
+variable "ansible_bastion_private_ip" {
+  description = "Private IP of the Ansible bastion host"
   type        = string
 }
 variable "linux_bastion_public_dns" {
