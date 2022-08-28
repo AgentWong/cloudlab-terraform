@@ -36,7 +36,7 @@ module "pdc" {
 
   key_name           = var.key_name
   instance_name      = local.pdc_name
-  instance_type      = "t3.medium"
+  instance_type      = "t2.small"
   instance_count     = 1
   ami_owner          = "amazon"
   ami_name           = "Windows_Server-2019-English-Full-Base*"
@@ -100,7 +100,7 @@ module "rdc" {
 
   key_name           = var.key_name
   instance_name      = local.rdc_name
-  instance_type      = "t3.medium"
+  instance_type      = "t2.small"
   instance_count     = 1
   ami_owner          = "amazon"
   ami_name           = "Windows_Server-2019-English-Full-Base*"

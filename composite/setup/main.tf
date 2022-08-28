@@ -85,7 +85,7 @@ ansible-galaxy collection install community.windows -p /usr/share/ansible/collec
 chown -R ec2-user:ec2-user /home/ec2-user/ansible
 EOF
 }
-module "windows-bastion" {
+/* module "windows-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
@@ -105,7 +105,7 @@ resource "aws_eip" "windows-bastion" {
   vpc                       = true
   network_interface         = module.windows-bastion.primary_network_interface_ids[0]
   associate_with_private_ip = module.windows-bastion.private_ips[0]
-}
+} */
 
 resource "aws_flow_log" "vpc_flow_log" {
   iam_role_arn    = aws_iam_role.vpc_flow_log.arn
