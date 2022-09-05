@@ -1,7 +1,7 @@
 locals {
   # Shared
   radmin_password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
-  ec2_keypair     = data.aws_secretsmanager_secret_version.ec2_keypair.secret_string
+  ec2_keypair     = nonsensitive(data.aws_secretsmanager_secret_version.ec2_keypair.secret_string)
 
   # CA
   ca_password         = rsadecrypt(module.ca.password_data[0], local.ec2_keypair)

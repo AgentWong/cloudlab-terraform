@@ -2,7 +2,7 @@ locals {
   # Shared
   vpc_cidr               = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])
   default_admin_password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
-  ec2_keypair            = data.aws_secretsmanager_secret_version.ec2_keypair.secret_string
+  ec2_keypair            = nonsensitive(data.aws_secretsmanager_secret_version.ec2_keypair.secret_string)
 
   # PDC
   pdc_name                  = "${var.environment}-PDC"
