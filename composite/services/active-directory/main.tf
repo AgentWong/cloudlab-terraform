@@ -1,24 +1,3 @@
-locals {
-  # Shared
-  vpc_cidr               = regex("\\b(?:\\d{1,3}.){1}\\d{1,3}\\b", module.pdc.private_ips[0])
-  default_admin_password = nonsensitive(data.aws_secretsmanager_secret_version.radmin_password.secret_string)
-  ec2_keypair            = data.aws_secretsmanager_secret_version.ec2_keypair.secret_string
-
-  # PDC
-  pdc_name                  = "${var.environment}-PDC"
-  pdc_password              = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
-  pdc_subnet_cidr           = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
-  all_subnets_3_octet       = concat([for cidr in var.private_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)], [for cidr in var.public_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)])
-  list_reverse_lookup_zones = [for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
-  reverse_lookup_zones      = join(",", local.list_reverse_lookup_zones)
-  # join(".", reverse(split(".", local.pdc_subnet_cidr)))
-
-  # RDC
-  rdc_name        = "${var.environment}-RDC"
-  rdc_password    = rsadecrypt(module.rdc.password_data[0], file("~/.ssh/id_rsa"))
-  rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[1])
-
-}
 data "aws_secretsmanager_secret_version" "ec2_keypair" {
   secret_id = var.ec2_keypair_secret_id
 }
@@ -52,8 +31,6 @@ module "pdc" {
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
 Get-NetFirewallRule -DisplayGroup 'Network Discovery' | Set-NetFirewallRule -Profile 'Private, Domain' -Enabled true
 winrm quickconfig -quiet
-#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 0
-#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
 </powershell>
 EOF
 }
@@ -80,7 +57,7 @@ resource "null_resource" "ansible_pdc" {
       vars = {
         new_hostname         = module.pdc.instance_names[0]
         ansible_user         = "Administrator"
-        dns_server           = "${local.vpc_cidr}.0.2" # Amazon DNS
+        dns_server           = "${var.vpc_cidr}.0.2" # Amazon DNS
         pdc_hostname         = "${local.pdc_subnet_cidr}.5"
         domain               = var.domain_name
         netbios              = var.netbios
@@ -116,8 +93,6 @@ module "rdc" {
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"
 Get-NetFirewallRule -DisplayGroup 'Network Discovery' | Set-NetFirewallRule -Profile 'Private, Domain' -Enabled true
 winrm quickconfig -quiet
-#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 0
-#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
 </powershell>
 EOF
   depends_on = [
@@ -204,7 +179,7 @@ resource "null_resource" "reboot_rdc" {
   provisioner "local-exec" {
     command = <<EOT
     aws ec2 reboot-instances --instance-ids ${module.rdc.instance_ids[0]} --region ${var.region}
-    sleep 120s
+    sleep 180s
     EOT
   }
   depends_on = [
@@ -249,9 +224,9 @@ depends_on = [
 }
 
 
-/* resource "aws_vpc_dhcp_options" "this" {
+resource "aws_vpc_dhcp_options" "this" {
   domain_name          = var.domain_name
-  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "${local.vpc_cidr}.0.2"]
+  domain_name_servers  = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "${var.vpc_cidr}.0.2"]
   ntp_servers          = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5", "169.254.169.123"]
   netbios_name_servers = ["${local.pdc_subnet_cidr}.5", "${local.rdc_subnet_cidr}.5"]
   netbios_node_type    = 2
@@ -259,4 +234,7 @@ depends_on = [
 resource "aws_vpc_dhcp_options_association" "dns_resolver" {
   vpc_id          = module.vpc.vpc_id
   dhcp_options_id = aws_vpc_dhcp_options.this.id
-} */
+  depends_on = [
+    null_resource.ansible_rdc_finish
+  ]
+}
