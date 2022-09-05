@@ -6,7 +6,7 @@ locals {
 
   # PDC
   pdc_name                  = "${var.environment}-PDC"
-  pdc_password              = rsadecrypt(module.pdc.password_data[0], file("~/.ssh/id_rsa"))
+  pdc_password              = rsadecrypt(module.pdc.password_data[0], local.ec2_keypair)
   pdc_subnet_cidr           = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
   all_subnets_3_octet       = concat([for cidr in var.private_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)], [for cidr in var.public_subnet_cidrs : regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", cidr)])
   list_reverse_lookup_zones = [for subnet in local.all_subnets_3_octet : "${join(".", reverse(split(".", subnet)))}.in-addr.arpa"]
@@ -14,7 +14,7 @@ locals {
 
   # RDC
   rdc_name        = "${var.environment}-RDC"
-  rdc_password    = rsadecrypt(module.rdc.password_data[0], file("~/.ssh/id_rsa"))
+  rdc_password    = rsadecrypt(module.rdc.password_data[0], local.ec2_keypair)
   rdc_subnet_cidr = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[1])
 
   # Outputs

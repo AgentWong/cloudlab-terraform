@@ -4,7 +4,7 @@ locals {
   ec2_keypair     = data.aws_secretsmanager_secret_version.ec2_keypair.secret_string
 
   # CA
-  ca_password         = rsadecrypt(module.ca.password_data[0], file("~/.ssh/id_rsa"))
+  ca_password         = rsadecrypt(module.ca.password_data[0], local.ec2_keypair)
   ca_subnet_cidr      = regex("\\b(?:\\d{1,3}.){2}\\d{1,3}\\b", var.private_subnet_cidrs[0])
 
 }
