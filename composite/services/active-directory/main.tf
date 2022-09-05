@@ -232,7 +232,7 @@ resource "aws_vpc_dhcp_options" "this" {
   netbios_node_type    = 2
 }
 resource "aws_vpc_dhcp_options_association" "dns_resolver" {
-  vpc_id          = module.vpc.vpc_id
+  vpc_id          = var.vpc_id
   dhcp_options_id = aws_vpc_dhcp_options.this.id
   depends_on = [
     null_resource.ansible_rdc_finish
