@@ -71,7 +71,7 @@ resource "null_resource" "ansible_ca_domain_join" {
 ]
 }
 depends_on = [
-  module.rdc
+  module.ca
 ]
 }
 resource "null_resource" "ansible_ca" {
