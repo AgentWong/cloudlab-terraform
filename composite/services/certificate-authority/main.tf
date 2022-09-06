@@ -96,7 +96,7 @@ resource "null_resource" "ansible_ca" {
       ansible_password = local.radmin_password
       vars = {
         ansible_user = "radmin@${var.domain_name}"
-        hostname     = "${module.ca.instance_names[0]}.${var.domain_name}"
+        hostname     = module.ca.instance_names[0]
         domain       = var.domain_name
         domain_dn    = var.distinguished_name
         domain_admin = "radmin@${var.domain_name}"
