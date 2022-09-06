@@ -99,6 +99,7 @@ resource "null_resource" "ansible_ca" {
         hostname     = module.ca.instance_names[0]
         domain       = var.domain_name
         domain_dn    = var.distinguished_name
+        ent_ca_common_name = "${var.org_name}-Root-CA"
         domain_admin = "radmin@${var.domain_name}"
         password     = local.radmin_password
       }

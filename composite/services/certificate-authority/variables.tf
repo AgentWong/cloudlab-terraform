@@ -23,6 +23,10 @@ variable "radmin_password_id" {
   description = "The radmin account password id"
   type        = string
 }
+variable "org_name" {
+  description = "Organization Name"
+  type        = string
+}
 
 # EC2
 variable "environment" {
