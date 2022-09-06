@@ -18,7 +18,7 @@ module "linux-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
-  instance_name               = "linux_bastion"
+  instance_name               = "linux-bastion"
   instance_type               = "t2.micro"
   instance_count              = 1
   associate_public_ip_address = true
@@ -62,7 +62,7 @@ module "ansible-bastion" {
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
-  instance_name               = "ansible_bastion"
+  instance_name               = "ansible-bastion"
   instance_type               = "t2.micro"
   instance_count              = 1
   iam_instance_profile        = aws_iam_instance_profile.ansible_inventory_profile.name
@@ -89,7 +89,7 @@ EOF
   source = "../../base/compute/ec2"
 
   key_name                    = module.kms.key_name
-  instance_name               = "windows_bastion"
+  instance_name               = "windows-bastion"
   instance_type               = "t2.small"
   instance_count              = 1
   associate_public_ip_address = true

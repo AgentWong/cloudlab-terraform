@@ -18,7 +18,7 @@ module "ca" {
   source = "../../../base/compute/ec2"
 
   key_name           = var.key_name
-  instance_name      = "${var.environment}_CA"
+  instance_name      = "${var.environment}-CA"
   instance_type      = "t2.small"
   instance_count     = 1
   ami_owner          = "amazon"
