@@ -39,3 +39,8 @@ variable "linux_mgmt_cidr" {
   description = "CIDR block to allow SSH access."
   type        = list(string)
 }
+
+variable "ec2_private_keymat"{
+  description = "Private keymat"
+  type        = string
+}

@@ -38,12 +38,12 @@ resource "null_resource" "copy_private_key" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
+    private_key = var.ec2_private_keymat
     host        = aws_eip.linux-bastion.public_dns
   }
 
   provisioner "file" {
-    source      = "~/.ssh/id_rsa"
+    content      = var.ec2_private_keymat
     destination = "/home/ec2-user/.ssh/id_rsa"
   }
   provisioner "remote-exec" {
