@@ -4,5 +4,5 @@ resource "aws_secretsmanager_secret" "ec2_private_key" {
 }
 resource "aws_secretsmanager_secret_version" "ec2_private_key" {
   secret_id     = aws_secretsmanager_secret.ec2_private_key.id
-  secret_string = file("~/.ssh/id_rsa")
+  secret_string = var.ec2_private_keymat
 }
